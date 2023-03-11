@@ -1,6 +1,6 @@
 import * as cluster from './cluster'
 import * as ambassador from './ambassador'
-import * as telepresence from './telepresence'
+import * as telepresence from './traffic-manager'
 import * as emojivoto from './emojivoto'
 
 cluster.provider

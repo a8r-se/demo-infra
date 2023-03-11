@@ -1,7 +1,8 @@
 import * as k8s from '@pulumi/kubernetes'
+import config from '../config'
 
-export const provider = new k8s.Provider('ckurosawa@ckuro-public-cluster.us-west-2.eksctl.io', {
-  kubeconfig: '~/.kube/config',
-  cluster: 'ckuro-public-cluster.us-west-2.eksctl.io',
-  context: 'ckurosawa@ckuro-public-cluster.us-west-2.eksctl.io'
+export const provider = new k8s.Provider('k8sProvider', {
+  kubeconfig: config.require('providerKubeconfigPath'),
+  cluster: config.require('providerCluster'),
+  context: config.require('providerContext'),
 })

@@ -1,23 +1,21 @@
 import * as k8s from "@pulumi/kubernetes";
-import * as kx from "@pulumi/kubernetesx";
-import * as helm from "@pulumi/kubernetes/helm";
+//import * as helm from "@pulumi/kubernetes/helm";
 import * as cluster from "../cluster";
-import * as ambassadorCRDs from "../crds/ambassador/index";
 import * as ambassador from "../ambassador";
-import * as telepresenceCRDs from "../crds/telepresence/index";
-import config from "../config";
 
 export const interceptCRDs = new k8s.yaml.ConfigFile('telepresence-crds', {
   file: './tools/telepresence-crds.yaml',
 }, { provider: cluster.provider })
 
-export const chart = new helm.v3.Chart('traffic-manager', {
+export const chart = new k8s.helm.v3.Release('traffic-manager', {
+  name: 'traffic-manager',
   chart: 'telepresence',
   version: '2.11.1',
   namespace: ambassador.ambassadorNamespace.metadata.name,
-  fetchOpts: {
+  repositoryOpts: {
     repo: 'https://app.getambassador.io'
   },
+  recreatePods: true,
   values: {
     image: {
       registry: 'docker.io/datawire',
@@ -77,6 +75,9 @@ export const chart = new helm.v3.Chart('traffic-manager', {
           tag: '1.13.9',
         },
       },
-    }
+    },
+    'ambassador-agent': {
+      enabled: false,
+    },
   }
 }, { provider: cluster.provider, dependsOn: ambassador.ambassadorNamespace })

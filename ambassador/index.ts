@@ -1,5 +1,4 @@
 import * as k8s from "@pulumi/kubernetes";
-import * as kx from "@pulumi/kubernetesx";
 import * as helm from "@pulumi/kubernetes/helm";
 import * as cluster from "../cluster";
 import * as ambassadorCRDs from "../crds/ambassador/index";

@@ -1,5 +1,10 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as cluster from "../cluster";
+import * as telepresence from "../traffic-manager";
+import * as aws from '@pulumi/aws';
+import config from '../config'
+import * as ambassador from '../ambassador'
+import * as ambassadorCRDs from '../crds/ambassador'
 
 const namespace = new k8s.core.v1.Namespace('emojivoto', {
   metadata: {
@@ -355,11 +360,11 @@ export const webDeployment = new k8s.apps.v1.Deployment('web', {
               },
               {
                 name: 'EMOJISVC_HOST',
-                value: 'emoji.emojivoto:grpc',
+                value: 'emoji.emojivoto:8080',
               },
               {
                 name: 'VOTINGSVC_HOST',
-                value: 'voting.emojivoto:grpc',
+                value: 'voting.emojivoto:8080',
               },
               {
                 name: 'INDEX_BUNDLE',
@@ -387,7 +392,7 @@ export const webDeployment = new k8s.apps.v1.Deployment('web', {
       }
     },
   },
-}, { provider: cluster.provider, dependsOn: [namespace, webServiceAcct] })
+}, { provider: cluster.provider, dependsOn: [namespace, webServiceAcct, telepresence.chart] })
 
 export const votBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
   metadata: {
@@ -443,3 +448,37 @@ export const votBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
     },
   },
 }, { provider: cluster.provider, dependsOn: [namespace, webDeployment] })
+
+export const emojiDomain = new aws.route53.Record('demo', {
+  zoneId: config.require('route53ZoneId'),
+  name: 'demo',
+  type: 'A',
+  records: [ambassador.publicIp],
+  ttl: 300,
+  allowOverwrite: true,
+}, { dependsOn: [ambassador.chart, ambassador.apiext] })
+
+export const emojiHost = new ambassadorCRDs.getambassador.v3alpha1.Host('emoji-host', {
+  metadata: {
+    name: 'emoji-host',
+    namespace: namespace.metadata.name,
+  },
+  spec: {
+    acmeProvider: {
+      email: config.require('email'),
+    },
+    hostname: emojiDomain.fqdn,
+  }
+}, { provider: cluster.provider, dependsOn: [emojiDomain, ambassador.apiext] })
+
+export const emojiMapping = new ambassadorCRDs.getambassador.v3alpha1.Mapping('emoji-mapping', {
+  metadata: {
+    name: 'emoji-mapping',
+    namespace: namespace.metadata.name,
+  },
+  spec: {
+    hostname: emojiDomain.fqdn,
+    prefix: '/',
+    service: 'web.emojivoto:http',
+  }
+}, { provider: cluster.provider, dependsOn: [emojiHost, emojiDomain, ambassador.apiext] })
