@@ -19,7 +19,7 @@ export const chart = new k8s.helm.v3.Release('traffic-manager', {
   values: {
     image: {
       registry: 'docker.io/datawire',
-      name: 'tel2',
+      name: 'ambassador-telepresence-manager',
     },
     resources: {
       limits: {
@@ -72,12 +72,15 @@ export const chart = new k8s.helm.v3.Release('traffic-manager', {
         image: {
           registry: 'docker.io/datawire',
           name: 'ambassador-telepresence-agent',
-          tag: '1.13.9',
+          tag: '1.13.10',
         },
       },
     },
     'ambassador-agent': {
       enabled: false,
     },
+    'trafficManager': {
+      mode: 'team'
+    }
   }
 }, { provider: cluster.provider, dependsOn: ambassador.ambassadorNamespace })

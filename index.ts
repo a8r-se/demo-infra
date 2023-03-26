@@ -11,3 +11,6 @@ ambassador.httpsListener
 ambassador.wildcardHost
 telepresence.chart
 emojivoto.emojiDeployment
+emojivoto.votingDeployment
+emojivoto.webDeployment
+emojivoto.voteBotDeployment

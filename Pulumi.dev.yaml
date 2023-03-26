@@ -2,7 +2,8 @@ config:
   demo-infra:cloudConnectToken:
     secure: AAABAIyoqOV/wkQN1ZWIjt4FGAubQ3qY0nDRjON7oFnXUTFdjDqrpymQVnbhB5EN/pxJDnN/jGjRY1l6+a6BKorlCFx35jSxemFeRte6MbM5iG5MvZj5tOqmFvXSGrWgbsIl91iFJb1CilSoSpPJGTWMMhO6wATPaaqh6Jk5QdssW6KJ
   demo-infra:email: caseykurosawa@datawire.io
-  demo-infra:kubeconfig: ~/.kube/kception/config.yaml
+  demo-infra:hostPrefix: demo
   demo-infra:providerCluster: ckuro-pulumi
   demo-infra:providerContext: ckuro-pulumi
+  demo-infra:providerKubeconfigPath: /Users/ckurosawa/.kube/kception/config.yaml
   demo-infra:route53ZoneId: Z00434702VVX37FTD2XQQ

@@ -1,9 +1,9 @@
 {
-    "name": "@pulumi/crds",
+    "name": "@pulumi/aescrds",
     "version": "",
     "scripts": {
         "build": "tsc",
-        "install": "node scripts/install-pulumi-plugin.js resource crds "
+        "install": "node scripts/install-pulumi-plugin.js resource aescrds "
     },
     "devDependencies": {
         "typescript": "^4.3.5"
@@ -13,6 +13,6 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "crds"
+        "name": "aescrds"
     }
 }

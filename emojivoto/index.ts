@@ -5,6 +5,7 @@ import * as aws from '@pulumi/aws';
 import config from '../config'
 import * as ambassador from '../ambassador'
 import * as ambassadorCRDs from '../crds/ambassador'
+import * as telepresenceCRDs from '../crds/telepresence'
 
 const namespace = new k8s.core.v1.Namespace('emojivoto', {
   metadata: {
@@ -394,7 +395,7 @@ export const webDeployment = new k8s.apps.v1.Deployment('web', {
   },
 }, { provider: cluster.provider, dependsOn: [namespace, webServiceAcct, telepresence.chart] })
 
-export const votBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
+export const voteBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
   metadata: {
     name: 'vote-bot',
     namespace: namespace.metadata.name,
@@ -451,7 +452,7 @@ export const votBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
 
 export const emojiDomain = new aws.route53.Record('demo', {
   zoneId: config.require('route53ZoneId'),
-  name: 'demo',
+  name: config.require('hostPrefix'),
   type: 'A',
   records: [ambassador.publicIp],
   ttl: 300,
@@ -482,3 +483,82 @@ export const emojiMapping = new ambassadorCRDs.getambassador.v3alpha1.Mapping('e
     service: 'web.emojivoto:http',
   }
 }, { provider: cluster.provider, dependsOn: [emojiHost, emojiDomain, ambassador.apiext] })
+
+export const emojiWebSpec = new telepresenceCRDs.getambassador.v1alpha1.InterceptSpecification('emoji-web-spec', {
+  metadata: {
+    name: 'emoji-web-spec',
+    namespace: namespace.metadata.name,
+  },
+  spec: {
+    connection: {
+      context: config.require('providerContext'),
+    },
+    prerequisites: [
+      {
+        create: 'build-yarn',
+      },
+      {
+        create: 'go-build'
+      }
+    ],
+    workloads: [
+      {
+        intercepts: [
+          {
+            handler: 'go-run',
+            headers: [
+              {
+                name: 'x-telepresence-intercept-id',
+                value: '{{ .Telepresence.Username }}',
+              },
+            ],
+            port: 'http',
+            previewURL: {
+              enable: true,
+            }
+          }
+        ],
+        name: 'web',
+        namespace: 'emojivoto',
+      },
+    ],
+    handlers: [
+      {
+        name: 'build-yarn',
+        script: {
+          run: 'cd emojivoto-web/webapp && yarn webpack-dev-server --port 8083 &'
+        },
+      },
+      {
+        name: 'go-build',
+        script: {
+          run: 'cd emojivoto-web/cmd && go build -gcflags="all=-N -l" -o server'
+        },
+      },
+      {
+        name: 'go-run',
+        environment: [
+          {
+            name: 'WEB_PORT',
+            value: '8080',
+          },
+          {
+            name: 'VOTINGSVC_HOST',
+            value: 'voting.emojivoto:8080',
+          },
+          {
+            name: 'EMOJISVC_HOST',
+            value: 'emoji.emojivoto:8080',
+          },
+          {
+            name: 'WEBPACK_DEV_SERVER',
+            value: 'http://localhost:8083',
+          },
+        ],
+        script: {
+          run: 'cd emojivoto-web/cmd && ./server',
+        },
+      },
+    ],
+  },
+}, { provider: cluster.provider, dependsOn: [namespace, telepresence.interceptCRDs] })
