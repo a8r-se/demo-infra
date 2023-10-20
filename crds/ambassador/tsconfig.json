@@ -13,6 +13,10 @@
         "strict": true
     },
     "files": [
+        "gateway/index.ts",
+        "gateway/v1alpha1/index.ts",
+        "gateway/v1alpha1/webApplicationFirewall.ts",
+        "gateway/v1alpha1/webApplicationFirewallPolicy.ts",
         "getambassador/index.ts",
         "getambassador/v1/authService.ts",
         "getambassador/v1/consulResolver.ts",

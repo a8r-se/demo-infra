@@ -484,7 +484,7 @@ export const emojiMapping = new ambassadorCRDs.getambassador.v3alpha1.Mapping('e
   }
 }, { provider: cluster.provider, dependsOn: [emojiHost, emojiDomain, ambassador.apiext] })
 
-export const emojiWebSpec = new telepresenceCRDs.getambassador.v1alpha1.InterceptSpecification('emoji-web-spec', {
+export const emojiWebSpec = new telepresenceCRDs.getambassador.v1alpha2.InterceptSpecification('emoji-web-spec', {
   metadata: {
     name: 'emoji-web-spec',
     namespace: namespace.metadata.name,

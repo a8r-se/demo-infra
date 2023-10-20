@@ -14,8 +14,10 @@
     },
     "files": [
         "getambassador/index.ts",
-        "getambassador/v1alpha1/index.ts",
-        "getambassador/v1alpha1/interceptSpecification.ts",
+        "getambassador/v1alpha2/index.ts",
+        "getambassador/v1alpha2/interceptSpecification.ts",
+        "getambassador/v1alpha3/index.ts",
+        "getambassador/v1alpha3/interceptSpecification.ts",
         "index.ts",
         "provider.ts",
         "types/index.ts",

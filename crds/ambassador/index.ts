@@ -12,10 +12,12 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
 
 // Export sub-modules:
+import * as gateway from "./gateway";
 import * as getambassador from "./getambassador";
 import * as types from "./types";
 
 export {
+    gateway,
     getambassador,
     types,
 };

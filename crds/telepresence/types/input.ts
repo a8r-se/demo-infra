@@ -8,7 +8,7 @@ import * as outputs from "../types/output";
 import {ObjectMeta} from "../meta/v1";
 
 export namespace getambassador {
-    export namespace v1alpha1 {
+    export namespace v1alpha2 {
         /**
          * The Intercept Specification defines Telepresence intercepts.
          */
@@ -16,17 +16,17 @@ export namespace getambassador {
             /**
              * Connection properties to use when Telepresence connects to the cluster.
              */
-            connection?: pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecConnectionArgs>;
+            connection?: pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecConnectionArgs>;
             handlers?: pulumi.Input<any[]>;
             /**
              * An name to give to the specification.
              */
             name?: pulumi.Input<string>;
-            prerequisites?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecPrerequisitesArgs>[]>;
+            prerequisites?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecPrerequisitesArgs>[]>;
             /**
              * Remote workloads that are intercepted, keyed by workload name.
              */
-            workloads?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsArgs>[]>;
+            workloads?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsArgs>[]>;
         }
 
         /**
@@ -96,7 +96,7 @@ export namespace getambassador {
             /**
              * The services and/or ports to intercept
              */
-            intercepts?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsInterceptsArgs>[]>;
+            intercepts?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsArgs>[]>;
             name: pulumi.Input<string>;
             /**
              * The namespace for the workload and services
@@ -120,7 +120,11 @@ export namespace getambassador {
             /**
              * Headers that will filter the intercept. If omitted or empty, and if global isn't explicitly set to true, an auto header will be generated
              */
-            headers?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsInterceptsHeadersArgs>[]>;
+            headers?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsHeadersArgs>[]>;
+            /**
+             * The local IP address that will receive the intercepted traffic.
+             */
+            localAddress?: pulumi.Input<string>;
             /**
              * The local port that will receive the intercepted traffic.
              */
@@ -128,7 +132,7 @@ export namespace getambassador {
             /**
              * Metadata that will be returned by the Telepresence API server
              */
-            meta?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsInterceptsMetaArgs>[]>;
+            meta?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsMetaArgs>[]>;
             /**
              * The local directory or drive where the remote volumes are mounted
              */
@@ -157,7 +161,7 @@ export namespace getambassador {
              * The port that will be intercepted.
              */
             port?: pulumi.Input<number | string>;
-            previewURL?: pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlArgs>;
+            previewURL?: pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlArgs>;
             /**
              * Name of service to intercept
              */
@@ -186,12 +190,247 @@ export namespace getambassador {
             /**
              * Additional headers in key1=value1,key2=value2 pairs injected in every preview page request
              */
-            extraHeaders?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlExtraheadersArgs>[]>;
+            extraHeaders?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlExtraheadersArgs>[]>;
+            ingress?: pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlIngressArgs>;
         }
 
         export interface InterceptSpecificationSpecWorkloadsInterceptsPreviewurlExtraheadersArgs {
             name: pulumi.Input<string>;
             value: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsPreviewurlIngressArgs {
+            /**
+             * The ingress hostname.
+             */
+            host?: pulumi.Input<string>;
+            /**
+             * The ingress L5 Hostname. Defaults to ingressHost
+             */
+            l5Host?: pulumi.Input<string>;
+            /**
+             * The ingress port.
+             */
+            port?: pulumi.Input<number>;
+            /**
+             * Determines if TLS is used.
+             */
+            tls?: pulumi.Input<boolean>;
+        }
+    }
+
+    export namespace v1alpha3 {
+        /**
+         * The Intercept Specification defines Telepresence intercepts.
+         */
+        export interface InterceptSpecificationSpecArgs {
+            /**
+             * Connection properties to use when Telepresence connects to the cluster.
+             */
+            connection?: pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecConnectionArgs>;
+            handlers?: pulumi.Input<any[]>;
+            /**
+             * An name to give to the specification.
+             */
+            name?: pulumi.Input<string>;
+            prerequisites?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecPrerequisitesArgs>[]>;
+            /**
+             * Remote workloads that are intercepted, keyed by workload name.
+             */
+            workloads?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsArgs>[]>;
+        }
+
+        /**
+         * Connection properties to use when Telepresence connects to the cluster.
+         */
+        export interface InterceptSpecificationSpecConnectionArgs {
+            /**
+             * Additional comma separated list of CIDR to proxy.
+             */
+            alsoProxy?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * Username to impersonate for the operation.
+             */
+            as?: pulumi.Input<string>;
+            /**
+             * Groups to impersonate for the operation.
+             */
+            asGroups?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * UID to impersonate for the operation.
+             */
+            asUID?: pulumi.Input<string>;
+            /**
+             * The name of the kubeconfig cluster to use
+             */
+            cluster?: pulumi.Input<string>;
+            /**
+             * The name of the kubeconfig context to use
+             */
+            context?: pulumi.Input<string>;
+            /**
+             * The namespace where the traffic manager is to be found.
+             */
+            managerNamespace?: pulumi.Input<string>;
+            /**
+             * The namespaces that Telepresence will be concerned with
+             */
+            mappedNamespaces?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * Comma separated list of CIDR to never proxy.
+             */
+            neverProxy?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The name of the kubeconfig user to use
+             */
+            user?: pulumi.Input<string>;
+        }
+
+        /**
+         * Things to create prior to starting any intercepts, and delete once the intercept is complete.
+         */
+        export interface InterceptSpecificationSpecPrerequisitesArgs {
+            /**
+             * A handler to create things prior to starting any intercepts.
+             */
+            create: pulumi.Input<string>;
+            /**
+             * A handler to delete the created things once all intercepts have ended.
+             */
+            delete?: pulumi.Input<string>;
+        }
+
+        /**
+         * An intercepted workload (Deployment, ReplicaSet or StatefulSet), keyed by name.
+         */
+        export interface InterceptSpecificationSpecWorkloadsArgs {
+            /**
+             * The services and/or ports to intercept
+             */
+            intercepts?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsArgs>[]>;
+            name: pulumi.Input<string>;
+            /**
+             * The namespace for the workload and services
+             */
+            namespace?: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsArgs {
+            /**
+             * If set to false, disables this intercept. Default is true
+             */
+            enabled?: pulumi.Input<boolean>;
+            /**
+             * If true, then intercept all tcp/udp traffic. Mutually exclusive with headers and pathXxx properties
+             */
+            global?: pulumi.Input<boolean>;
+            /**
+             * The intercept handler that handles this intercept.
+             */
+            handler: pulumi.Input<string>;
+            /**
+             * Headers that will filter the intercept. If omitted or empty, and if global isn't explicitly set to true, an auto header will be generated
+             */
+            headers?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsHeadersArgs>[]>;
+            /**
+             * The local IP address that will receive the intercepted traffic.
+             */
+            localAddress?: pulumi.Input<string>;
+            /**
+             * The local port that will receive the intercepted traffic.
+             */
+            localPort?: pulumi.Input<number>;
+            /**
+             * Metadata that will be returned by the Telepresence API server
+             */
+            meta?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsMetaArgs>[]>;
+            /**
+             * The local directory or drive where the remote volumes are mounted
+             */
+            mountPoint?: pulumi.Input<string>;
+            /**
+             * Optional name of the intercept.
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Path filter for the intercept.
+             */
+            pathEqual?: pulumi.Input<string>;
+            /**
+             * Path prefix filter for the intercept. Defaults to "/"
+             */
+            pathPrefix?: pulumi.Input<string>;
+            /**
+             * Path regular expression filter for the intercept.
+             */
+            pathRegexp?: pulumi.Input<string>;
+            /**
+             * Path suffix filter for the intercept.
+             */
+            pathSuffix?: pulumi.Input<string>;
+            /**
+             * Use plaintext format when communicating with the interceptor process on the local workstation. Only meaningful when intercepting workloads annotated with "getambassador.io/inject-originating-tls-secret" to prevent that TLS is used during intercepts
+             */
+            plaintext?: pulumi.Input<boolean>;
+            /**
+             * The port that will be intercepted.
+             */
+            port?: pulumi.Input<number | string>;
+            previewURL?: pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlArgs>;
+            /**
+             * Name of service to intercept
+             */
+            service?: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsHeadersArgs {
+            name: pulumi.Input<string>;
+            value: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsMetaArgs {
+            name: pulumi.Input<string>;
+            value: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsPreviewurlArgs {
+            /**
+             * Display banner on preview page (default true)
+             */
+            banner?: pulumi.Input<boolean>;
+            /**
+             * Enable preview URL (default true)
+             */
+            enable?: pulumi.Input<boolean>;
+            /**
+             * Additional headers in key1=value1,key2=value2 pairs injected in every preview page request
+             */
+            extraHeaders?: pulumi.Input<pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlExtraheadersArgs>[]>;
+            ingress?: pulumi.Input<inputs.getambassador.v1alpha3.InterceptSpecificationSpecWorkloadsInterceptsPreviewurlIngressArgs>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsPreviewurlExtraheadersArgs {
+            name: pulumi.Input<string>;
+            value: pulumi.Input<string>;
+        }
+
+        export interface InterceptSpecificationSpecWorkloadsInterceptsPreviewurlIngressArgs {
+            /**
+             * The ingress hostname.
+             */
+            host?: pulumi.Input<string>;
+            /**
+             * The ingress L5 Hostname. Defaults to ingressHost
+             */
+            l5Host?: pulumi.Input<string>;
+            /**
+             * The ingress port.
+             */
+            port?: pulumi.Input<number>;
+            /**
+             * Determines if TLS is used.
+             */
+            tls?: pulumi.Input<boolean>;
         }
     }
 }

@@ -9,11 +9,11 @@ import {ObjectMeta} from "../../meta/v1";
 /**
  * DevPortal is the Schema for the DevPortals API
  *  DevPortal resources specify the `what` and `how` is shown in a DevPortal:
- *   1. `what` is in a DevPortal can be controlled with
- *      - a `selector`, that can be used for filtering `Mappings`.
- *      - a `docs` listing of (services, url)
- *   2. `how` is a pointer to some `contents` (a checkout of a Git repository     with go-templates/markdown/css).
- *       Multiple `DevPortal`s can exist in the cluster, and the Dev Portal server will show them at different endpoints. A `DevPortal` resource with a special name, `ambassador`, will be used for configuring the default Dev Portal (served at `/docs/` by default).
+ *  1. `what` is in a DevPortal can be controlled with
+ *  - a `selector`, that can be used for filtering `Mappings`.
+ *  - a `docs` listing of (services, url)
+ *  2. `how` is a pointer to some `contents` (a checkout of a Git repository with go-templates/markdown/css).
+ *      Multiple `DevPortal`s can exist in the cluster, and the Dev Portal server will show them at different endpoints. A `DevPortal` resource with a special name, `ambassador`, will be used for configuring the default Dev Portal (served at `/docs/` by default).
  */
 export class DevPortal extends pulumi.CustomResource {
     /**

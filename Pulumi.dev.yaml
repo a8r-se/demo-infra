@@ -1,4 +1,5 @@
 config:
+  aws:region: us-west-2
   demo-infra:cloudConnectToken:
     secure: AAABAIyoqOV/wkQN1ZWIjt4FGAubQ3qY0nDRjON7oFnXUTFdjDqrpymQVnbhB5EN/pxJDnN/jGjRY1l6+a6BKorlCFx35jSxemFeRte6MbM5iG5MvZj5tOqmFvXSGrWgbsIl91iFJb1CilSoSpPJGTWMMhO6wATPaaqh6Jk5QdssW6KJ
   demo-infra:email: caseykurosawa@datawire.io

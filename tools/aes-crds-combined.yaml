@@ -1758,15 +1758,15 @@ spec:
               to use for requests.
             properties:
               ambassadorSelector:
-                # default:
-                #   ambassadorIds:
-                #   - default
+                default:
+                  ambassadorIds:
+                  - default
                 description: Optional field that can be used to limit which instances
                   of Edge Stack can make use of this resource
                 properties:
                   ambassadorIds:
-                    # default:
-                    # - default
+                    default:
+                    - default
                     description: limits this resource to be used only by instances
                       of Edge Stack that have an AMBASSADOR_ID matching one of the
                       ids in the list
@@ -2131,15 +2131,15 @@ spec:
             description: Defines the desired user configuration for the WebApplicationFirewall.
             properties:
               ambassadorSelector:
-                # default:
-                #   ambassadorIds:
-                #   - default
+                default:
+                  ambassadorIds:
+                  - default
                 description: Optional field that can be used to limit which instances
                   of Edge Stack can make use of this resource
                 properties:
                   ambassadorIds:
-                    # default:
-                    # - default
+                    default:
+                    - default
                     description: limits this resource to be used only by instances
                       of Edge Stack that have an AMBASSADOR_ID matching one of the
                       ids in the list
@@ -6466,3 +6466,198 @@ spec:
         x-kubernetes-preserve-unknown-fields: true
     served: false
     storage: false
+---
+################################################################################
+# Namespace                                                                    #
+################################################################################
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emissary-system
+---
+################################################################################
+# ServiceAccount                                                               #
+################################################################################
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: emissary-apiext
+  namespace: emissary-system
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+---
+################################################################################
+# Cluster permissions                                                          #
+################################################################################
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: emissary-apiext
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+rules:
+  - apiGroups: [ "apiextensions.k8s.io" ]
+    resources: [ "customresourcedefinitions" ]
+    verbs: [ "list", "watch" ]
+  - apiGroups: [ "apiextensions.k8s.io" ]
+    resources: [ "customresourcedefinitions" ]
+    resourceNames:
+      - authservices.getambassador.io
+      - consulresolvers.getambassador.io
+      - devportals.getambassador.io
+      - filterpolicies.getambassador.io
+      - filters.getambassador.io
+      - hosts.getambassador.io
+      - kubernetesendpointresolvers.getambassador.io
+      - kubernetesserviceresolvers.getambassador.io
+      - listeners.getambassador.io
+      - logservices.getambassador.io
+      - mappings.getambassador.io
+      - modules.getambassador.io
+      - ratelimits.getambassador.io
+      - ratelimitservices.getambassador.io
+      - tcpmappings.getambassador.io
+      - tlscontexts.getambassador.io
+      - tracingservices.getambassador.io
+      - webapplicationfirewallpolicies.gateway.getambassador.io
+      - webapplicationfirewalls.gateway.getambassador.io
+    verbs: [ "update" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: emissary-apiext
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: emissary-apiext
+subjects:
+  - kind: ServiceAccount
+    namespace: emissary-system
+    name: emissary-apiext
+---
+################################################################################
+# Namespaced permissions                                                       #
+################################################################################
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: emissary-apiext
+  namespace: emissary-system
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["emissary-ingress-webhook-ca"]
+    verbs: ["get", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: emissary-apiext
+  namespace: emissary-system
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: emissary-apiext
+subjects:
+- kind: ServiceAccount
+  namespace: emissary-system
+  name: emissary-apiext
+---
+################################################################################
+# Main                                                                         #
+################################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emissary-apiext
+  namespace: emissary-system
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+spec:
+  type: ClusterIP
+  ports:
+    - name: https
+      port: 443
+      targetPort: https
+  selector:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emissary-apiext
+  namespace: emissary-system
+  labels:
+    app.kubernetes.io/instance: emissary-apiext
+    app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+    app.kubernetes.io/name: emissary-apiext
+    app.kubernetes.io/part-of: emissary-apiext
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: emissary-apiext
+      app.kubernetes.io/name: emissary-apiext
+      app.kubernetes.io/part-of: emissary-apiext
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: emissary-apiext
+        app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
+        app.kubernetes.io/name: emissary-apiext
+        app.kubernetes.io/part-of: emissary-apiext
+    spec:
+      serviceAccountName: emissary-apiext
+      containers:
+        - name: emissary-apiext
+          image: docker.io/datawire/aes:3.7.0
+          imagePullPolicy: IfNotPresent
+          command: [ "apiext", "emissary-apiext" ]
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https
+              containerPort: 8443
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /probes/live
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            failureThreshold: 3

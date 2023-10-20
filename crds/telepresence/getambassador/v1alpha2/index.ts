@@ -15,11 +15,11 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "kubernetes:getambassador.io/v1alpha1:InterceptSpecification":
+            case "kubernetes:getambassador.io/v1alpha2:InterceptSpecification":
                 return new InterceptSpecification(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("tpcrds", "getambassador.io/v1alpha1", _module)
+pulumi.runtime.registerResourceModule("tpcrds", "getambassador.io/v1alpha2", _module)

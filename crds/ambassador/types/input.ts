@@ -5,7 +5,388 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+import * as utilities from "../utilities";
+
 import {ObjectMeta} from "../meta/v1";
+
+export namespace gateway {
+    export namespace v1alpha1 {
+        /**
+         * Defines the desired user configuration for a WebApplicationFirewallPolicy that contains a set of rules that configure which WebApplicationFirewallPolicy to use for requests.
+         */
+        export interface WebApplicationFirewallPolicySpecArgs {
+            /**
+             * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
+             */
+            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecAmbassadorselectorArgs>;
+            /**
+             * Set of matching rules that are checked against incoming request to determine which set of WebApplicationFirewalls to apply. If no matches are found then the request is allowed through to the upstream service.
+             */
+            rules: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesArgs>[]>;
+        }
+
+        /**
+         * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
+         */
+        export interface WebApplicationFirewallPolicySpecAmbassadorselectorArgs {
+            /**
+             * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
+             */
+            ambassadorIds?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * Defines criteria for matching requests to a WebApplicationFirewall
+         */
+        export interface WebApplicationFirewallPolicySpecRulesArgs {
+            /**
+             * A "glob-string" that matches on the `:authority` header of the incoming request. If not set it will match on all incoming requests.
+             */
+            host?: pulumi.Input<string>;
+            /**
+             * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
+             */
+            ifRequestHeader?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs>;
+            /**
+             * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
+             */
+            onError?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesOnerrorArgs>;
+            /**
+             * A "glob-string" that matches on the request path. If not provided then it will match on all incoming requests.
+             */
+            path?: pulumi.Input<string>;
+            /**
+             * Allows forcing a precedence ordering on the rules. By default the rules are evaluated in the order they are in the `WebApplicationFirewallPolicy.spec.rules` field. However, multiple WebApplicationFirewallPolicys can be applied to a cluster. To ensure that a specific ordering is enforced then using a precedence on rules ensures a specific ordering.
+             */
+            precedence?: pulumi.Input<number>;
+            /**
+             * References a WebApplicationFirewall that will be applied to the incoming request.
+             */
+            wafRef: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesWafrefArgs>;
+        }
+        /**
+         * webApplicationFirewallPolicySpecRulesArgsProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesArgs
+         */
+        export function webApplicationFirewallPolicySpecRulesArgsProvideDefaults(val: WebApplicationFirewallPolicySpecRulesArgs): WebApplicationFirewallPolicySpecRulesArgs {
+            return {
+                ...val,
+                host: (val.host) ?? "*",
+                ifRequestHeader: (val.ifRequestHeader ? pulumi.output(val.ifRequestHeader).apply(inputs.gateway.v1alpha1.webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults) : undefined),
+                path: (val.path) ?? "*",
+            };
+        }
+
+        /**
+         * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
+         */
+        export interface WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs {
+            /**
+             * Name of the HTTP Header to be matched. Name matching MUST be case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2). 
+             *  Valid values include: 
+             *  * "Authorization" * "Set-Cookie" 
+             *  Invalid values include: 
+             *  - ":method" - ":" is an invalid character. This means that HTTP/2 pseudo headers are not currently supported by this type. - "/invalid" - "/" is an invalid character
+             */
+            name: pulumi.Input<string>;
+            /**
+             * Allows the match criteria to be negated or flipped. 
+             *  For example, you can have a regex that checks for any non-empty string which would indicate would translate to if header exists on request then match on it. With negate turned on this would translate to match on any request that doesn't have a header.
+             */
+            negate?: pulumi.Input<boolean>;
+            /**
+             * Specifies the semantics of how HTTP header values should be compared. Valid HeaderMatchType values are: 
+             *  * "Exact" * "RegularExpression"
+             */
+            type?: pulumi.Input<string>;
+            /**
+             * Value of HTTP Header to be matched. 
+             *  if type is RegularExpression then this must be a valid regex with length being at least 1
+             */
+            value?: pulumi.Input<string>;
+        }
+        /**
+         * webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs
+         */
+        export function webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults(val: WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs): WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs {
+            return {
+                ...val,
+                type: (val.type) ?? "Exact",
+            };
+        }
+
+        /**
+         * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
+         */
+        export interface WebApplicationFirewallPolicySpecRulesOnerrorArgs {
+            /**
+             * statusCode sets the HTTP status code to use when denying the request.
+             */
+            statusCode?: pulumi.Input<number>;
+        }
+
+        /**
+         * References a WebApplicationFirewall that will be applied to the incoming request.
+         */
+        export interface WebApplicationFirewallPolicySpecRulesWafrefArgs {
+            /**
+             * Name of the WebApplicationFirewall
+             */
+            name: pulumi.Input<string>;
+            /**
+             * Namespace that the WebApplicationFirewall resides in. It must be a RFC 1123 label. 
+             *  This validation is based off of the corresponding Kubernetes validation: https://github.com/kubernetes/apimachinery/blob/02cfb53916346d085a6c6c7c66f882e3c6b0eca6/pkg/util/validation/validation.go#L187 
+             *  This is used for Namespace name validation here: https://github.com/kubernetes/apimachinery/blob/02cfb53916346d085a6c6c7c66f882e3c6b0eca6/pkg/api/validation/generic.go#L63 
+             *  Valid values include: 
+             *  * "example" 
+             *  Invalid values include: 
+             *  * "example.com" - "." is an invalid character
+             */
+            namespace?: pulumi.Input<string>;
+        }
+
+        /**
+         * Provides a list of conditions that describe the current state of the WebApplicationFirewallPolicy for fast feedback on whether the resource is configured correctly or not.
+         */
+        export interface WebApplicationFirewallPolicyStatusArgs {
+            /**
+             * Describes the current state of the WebApplicationFirewallPolicy Known condition types are: 
+             *  * "Accepted" * "Ready" * "Rejected" - if any rules have an error then the whole WebApplicationFirewallPolicy will be rejected.
+             */
+            conditions?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusConditionsArgs>[]>;
+            ruleStatuses?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatusesArgs>[]>;
+        }
+
+        /**
+         * Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+         *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
+         *  // other fields }
+         */
+        export interface WebApplicationFirewallPolicyStatusConditionsArgs {
+            /**
+             * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+             */
+            lastTransitionTime: pulumi.Input<string>;
+            /**
+             * message is a human readable message indicating details about the transition. This may be an empty string.
+             */
+            message: pulumi.Input<string>;
+            /**
+             * observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+             */
+            observedGeneration?: pulumi.Input<number>;
+            /**
+             * reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+             */
+            reason: pulumi.Input<string>;
+            /**
+             * status of the condition, one of True, False, Unknown.
+             */
+            status: pulumi.Input<string>;
+            /**
+             * type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+             */
+            type: pulumi.Input<string>;
+        }
+
+        /**
+         * Describes the status of a Rule within a WebApplicationFirewallPolicy.
+         */
+        export interface WebApplicationFirewallPolicyStatusRulestatusesArgs {
+            /**
+             * conditions describe the current state of this Rule.
+             */
+            conditions: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatusesConditionsArgs>[]>;
+            /**
+             * host of the rule with the error.
+             */
+            host: pulumi.Input<string>;
+            /**
+             * Provides the zero-based index in the list of Rules to help identify the rule with an error
+             */
+            index: pulumi.Input<number>;
+            /**
+             * path of the rule with the error.
+             */
+            path: pulumi.Input<string>;
+        }
+
+        /**
+         * Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+         *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
+         *  // other fields }
+         */
+        export interface WebApplicationFirewallPolicyStatusRulestatusesConditionsArgs {
+            /**
+             * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+             */
+            lastTransitionTime: pulumi.Input<string>;
+            /**
+             * message is a human readable message indicating details about the transition. This may be an empty string.
+             */
+            message: pulumi.Input<string>;
+            /**
+             * observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+             */
+            observedGeneration?: pulumi.Input<number>;
+            /**
+             * reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+             */
+            reason: pulumi.Input<string>;
+            /**
+             * status of the condition, one of True, False, Unknown.
+             */
+            status: pulumi.Input<string>;
+            /**
+             * type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+             */
+            type: pulumi.Input<string>;
+        }
+
+        /**
+         * Defines the desired user configuration for the WebApplicationFirewall.
+         */
+        export interface WebApplicationFirewallSpecArgs {
+            /**
+             * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
+             */
+            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecAmbassadorselectorArgs>;
+            firewallRules: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesArgs>[]>;
+            /**
+             * Provides a way to configure additional logging in the Edge Stack pods for the WebApplicationFirewall. This is in addition to the logging config that is available via the firewall configuration files. The following logs will always be output to the container logs when enabled.
+             */
+            logging?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingArgs>;
+        }
+
+        /**
+         * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
+         */
+        export interface WebApplicationFirewallSpecAmbassadorselectorArgs {
+            /**
+             * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
+             */
+            ambassadorIds?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * Contains configuration for where to load rules for a specific WebApplicationFirewall.
+         */
+        export interface WebApplicationFirewallSpecFirewallrulesArgs {
+            /**
+             * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
+             */
+            configMapRef?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesConfigmaprefArgs>;
+            /**
+             * Provides a path to a file or directory on the Edge Stack pod to load rules configuration from
+             */
+            file?: pulumi.Input<string>;
+            /**
+             * Configures downloading firewall rules from the internet via an HTTP request
+             */
+            http?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesHttpArgs>;
+            /**
+             * Indicates the method that we will use to load rules configuration for the WebApplicationFirewall
+             */
+            sourceType: pulumi.Input<string>;
+        }
+
+        /**
+         * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
+         */
+        export interface WebApplicationFirewallSpecFirewallrulesConfigmaprefArgs {
+            /**
+             * Key for the field in the configmap that should be use
+             */
+            key: pulumi.Input<string>;
+            /**
+             * Name that identifies the ConfigMap
+             */
+            name: pulumi.Input<string>;
+            /**
+             * Namespace refers to a Kubernetes namespace that the ConfigMap resides. It must be a RFC 1123 label. When no Namespace is provided, it defaults to the namespace of the parent object. 
+             *  This validation is based off of the corresponding Kubernetes validation: https://github.com/kubernetes/apimachinery/blob/02cfb53916346d085a6c6c7c66f882e3c6b0eca6/pkg/util/validation/validation.go#L187 
+             *  This is used for Namespace name validation here: https://github.com/kubernetes/apimachinery/blob/02cfb53916346d085a6c6c7c66f882e3c6b0eca6/pkg/api/validation/generic.go#L63 
+             *  Valid values include: 
+             *  * "example" 
+             *  Invalid values include: 
+             *  * "example.com" - "." is an invalid character
+             */
+            namespace?: pulumi.Input<string>;
+        }
+
+        /**
+         * Configures downloading firewall rules from the internet via an HTTP request
+         */
+        export interface WebApplicationFirewallSpecFirewallrulesHttpArgs {
+            /**
+             * Provides the address to download the firewall rules from.
+             */
+            url?: pulumi.Input<string>;
+        }
+
+        /**
+         * Provides a way to configure additional logging in the Edge Stack pods for the WebApplicationFirewall. This is in addition to the logging config that is available via the firewall configuration files. The following logs will always be output to the container logs when enabled.
+         */
+        export interface WebApplicationFirewallSpecLoggingArgs {
+            /**
+             * Controls logging behavior when the WebApplicationFirewall interrupts a request.
+             */
+            onInterrupt: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingOninterruptArgs>;
+        }
+
+        /**
+         * Controls logging behavior when the WebApplicationFirewall interrupts a request.
+         */
+        export interface WebApplicationFirewallSpecLoggingOninterruptArgs {
+            /**
+             * Configures whether the container should output logs. These additional logs are not enabled unless this is set to `true`
+             */
+            enabled: pulumi.Input<boolean>;
+        }
+
+        /**
+         * Provides a list of conditions that describe the current state of the WebApplicationFirewall for fast feedback on whether the resource is configured correctly or not.
+         */
+        export interface WebApplicationFirewallStatusArgs {
+            /**
+             * Describes the current state of the WebApplicationFirewall Known condition types are: 
+             *  * "Accepted" * "Ready" * "Rejected" - if any rules have an error then the whole WebApplicationFirewall will be rejected.
+             */
+            conditions?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallStatusConditionsArgs>[]>;
+        }
+
+        /**
+         * Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+         *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
+         *  // other fields }
+         */
+        export interface WebApplicationFirewallStatusConditionsArgs {
+            /**
+             * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+             */
+            lastTransitionTime: pulumi.Input<string>;
+            /**
+             * message is a human readable message indicating details about the transition. This may be an empty string.
+             */
+            message: pulumi.Input<string>;
+            /**
+             * observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+             */
+            observedGeneration?: pulumi.Input<number>;
+            /**
+             * reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+             */
+            reason: pulumi.Input<string>;
+            /**
+             * status of the condition, one of True, False, Unknown.
+             */
+            status: pulumi.Input<string>;
+            /**
+             * type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+             */
+            type: pulumi.Input<string>;
+        }
+    }
+}
 
 export namespace getambassador {
     export namespace v1 {
@@ -36,9 +417,6 @@ export namespace getambassador {
              * phaseCompleted and phasePending are valid when state==Pending or state==Error.
              */
             phasePending?: pulumi.Input<string>;
-            /**
-             * The first value listed in the Enum marker becomes the "zero" value, and it would be great if "Pending" could be the default value; but it's Important that the "zero" value be able to be shown as empty/omitted from display, and we really do want `kubectl get hosts` to say "Pending" in the "STATE" column, and not leave the column empty.
-             */
             state?: pulumi.Input<string>;
             tlsCertificateSource?: pulumi.Input<string>;
         }
@@ -68,7 +446,7 @@ export namespace getambassador {
             allowed_request_headers?: pulumi.Input<pulumi.Input<string>[]>;
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -90,9 +468,6 @@ export namespace getambassador {
              * TODO(lukeshu): In v3alpha2, consider getting rid of this struct type in favor of just using an int (i.e. `statusOnError: 500` instead of the current `statusOnError: { code: 500 }`).
              */
             status_on_error?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecStatus_on_errorArgs>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             timeout_ms?: pulumi.Input<number>;
             tls?: pulumi.Input<string>;
             /**
@@ -135,7 +510,7 @@ export namespace getambassador {
             serviceScheme?: pulumi.Input<string>;
             /**
              * TLS controls whether and how to represent the "tls" field when its value could be implied by the "service" field.  In v2, there were a lot of different ways to spell an "empty" value, and this field specifies which way to spell it (and will therefore only be used if the value will indeed be empty). 
-             *   | Value        | Representation                        | Meaning of representation          |  |--------------+---------------------------------------+------------------------------------|  | ""           | omit the field                        | defer to service (no TLSContext)   |  | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   |  | "string"     | store an empty string in the field    | defer to service (no TLSContext)   |  | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   |  | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
+             *  | Value        | Representation                        | Meaning of representation          | |--------------+---------------------------------------+------------------------------------| | ""           | omit the field                        | defer to service (no TLSContext)   | | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   | | "string"     | store an empty string in the field    | defer to service (no TLSContext)   | | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   | | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
              *  If the meaning of the representation contradicts anything else (if a TLSContext is to be used, or in the case of "bool:true" if TLS is not to be originated), then this field is ignored.
              */
             tls?: pulumi.Input<string>;
@@ -148,7 +523,7 @@ export namespace getambassador {
             address?: pulumi.Input<string>;
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -161,7 +536,7 @@ export namespace getambassador {
         export interface DevPortalSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -452,11 +827,11 @@ export namespace getambassador {
          */
         export interface HostSpecTlssecretArgs {
             /**
-             * Name is unique within a namespace to reference a secret resource.
+             * name is unique within a namespace to reference a secret resource.
              */
             name?: pulumi.Input<string>;
             /**
-             * Namespace defines the space within which the secret name must be unique.
+             * namespace defines the space within which the secret name must be unique.
              */
             namespace?: pulumi.Input<string>;
         }
@@ -479,9 +854,6 @@ export namespace getambassador {
              * phaseCompleted and phasePending are valid when state==Pending or state==Error.
              */
             phasePending?: pulumi.Input<string>;
-            /**
-             * The first value listed in the Enum marker becomes the "zero" value, and it would be great if "Pending" could be the default value; but it's Important that the "zero" value be able to be shown as empty/omitted from display, and we really do want `kubectl get hosts` to say "Pending" in the "STATE" column, and not leave the column empty.
-             */
             state?: pulumi.Input<string>;
             tlsCertificateSource?: pulumi.Input<string>;
         }
@@ -492,7 +864,7 @@ export namespace getambassador {
         export interface KubernetesEndpointResolverSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -504,7 +876,7 @@ export namespace getambassador {
         export interface KubernetesServiceResolverSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -516,7 +888,7 @@ export namespace getambassador {
         export interface ListenerSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -612,16 +984,13 @@ export namespace getambassador {
         export interface LogServiceSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
             driver?: pulumi.Input<string>;
             driver_config?: pulumi.Input<inputs.getambassador.v3alpha1.LogServiceSpecDriver_configArgs>;
             flush_interval_byte_size?: pulumi.Input<number>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}s`/`SecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             flush_interval_time?: pulumi.Input<number>;
             /**
              * TODO(lukeshu): In v3alpha2, drop this LogService.spec.grpc.  Due to sloppy implementation it is required to be present, and required to be 'true'.  It is silly to have a required field with only one valid value, we should just remove the thing.
@@ -657,14 +1026,14 @@ export namespace getambassador {
              * A case-insensitive list of the non-HTTP protocols to allow "upgrading" to from HTTP via the "Connection: upgrade" mechanism[1].  After the upgrade, Ambassador does not interpret the traffic, and behaves similarly to how it does for TCPMappings. 
              *  [1]: https://tools.ietf.org/html/rfc7230#section-6.7 
              *  For example, if your upstream service supports WebSockets, you would write 
-             *     allow_upgrade:    - websocket 
+             *  allow_upgrade: - websocket 
              *  Or if your upstream service supports upgrading from HTTP to SPDY (as the Kubernetes apiserver does for `kubectl exec` functionality), you would write 
-             *     allow_upgrade:    - spdy/3.1
+             *  allow_upgrade: - spdy/3.1
              */
             allow_upgrade?: pulumi.Input<pulumi.Input<string>[]>;
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -677,18 +1046,9 @@ export namespace getambassador {
             bypass_error_response_overrides?: pulumi.Input<boolean>;
             case_sensitive?: pulumi.Input<boolean>;
             circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecCircuit_breakersArgs>[]>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             cluster_idle_timeout_ms?: pulumi.Input<number>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             cluster_max_connection_lifetime_ms?: pulumi.Input<number>;
             cluster_tag?: pulumi.Input<string>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             connect_timeout_ms?: pulumi.Input<number>;
             cors?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecCorsArgs>;
             dns_type?: pulumi.Input<string>;
@@ -698,9 +1058,6 @@ export namespace getambassador {
             docs?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecDocsArgs>;
             enable_ipv4?: pulumi.Input<boolean>;
             enable_ipv6?: pulumi.Input<boolean>;
-            /**
-             * UntypedDict is relatively opaque as a Go type, but it preserves its contents in a roundtrippable way.
-             */
             envoy_override?: pulumi.Input<{[key: string]: any}>;
             /**
              * Error response overrides for this Mapping. Replaces all of the `error_response_overrides` set on the Ambassador module, if any.
@@ -730,9 +1087,6 @@ export namespace getambassador {
              *  If both Host and Hostname are set, an error is logged, Host is ignored, and Hostname is used.
              */
             hostname?: pulumi.Input<string>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             idle_timeout_ms?: pulumi.Input<number>;
             keepalive?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecKeepaliveArgs>;
             /**
@@ -834,9 +1188,6 @@ export namespace getambassador {
             display_name?: pulumi.Input<string>;
             ignored?: pulumi.Input<boolean>;
             path?: pulumi.Input<string>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             timeout_ms?: pulumi.Input<number>;
             url?: pulumi.Input<string>;
         }
@@ -1090,7 +1441,7 @@ export namespace getambassador {
             serviceScheme?: pulumi.Input<string>;
             /**
              * TLS controls whether and how to represent the "tls" field when its value could be implied by the "service" field.  In v2, there were a lot of different ways to spell an "empty" value, and this field specifies which way to spell it (and will therefore only be used if the value will indeed be empty). 
-             *   | Value        | Representation                        | Meaning of representation          |  |--------------+---------------------------------------+------------------------------------|  | ""           | omit the field                        | defer to service (no TLSContext)   |  | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   |  | "string"     | store an empty string in the field    | defer to service (no TLSContext)   |  | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   |  | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
+             *  | Value        | Representation                        | Meaning of representation          | |--------------+---------------------------------------+------------------------------------| | ""           | omit the field                        | defer to service (no TLSContext)   | | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   | | "string"     | store an empty string in the field    | defer to service (no TLSContext)   | | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   | | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
              *  If the meaning of the representation contradicts anything else (if a TLSContext is to be used, or in the case of "bool:true" if TLS is not to be originated), then this field is ignored.
              */
             tls?: pulumi.Input<string>;
@@ -1110,7 +1461,7 @@ export namespace getambassador {
         export interface ModuleSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -1140,9 +1491,6 @@ export namespace getambassador {
             protocol_version?: pulumi.Input<string>;
             service: pulumi.Input<string>;
             stats_name?: pulumi.Input<string>;
-            /**
-             * TODO(lukeshu): In v3alpha2, change all of the `{foo}_ms`/`MillisecondDuration` fields to `{foo}`/`metav1.Duration`.
-             */
             timeout_ms?: pulumi.Input<number>;
             tls?: pulumi.Input<string>;
             /**
@@ -1162,7 +1510,7 @@ export namespace getambassador {
             serviceScheme?: pulumi.Input<string>;
             /**
              * TLS controls whether and how to represent the "tls" field when its value could be implied by the "service" field.  In v2, there were a lot of different ways to spell an "empty" value, and this field specifies which way to spell it (and will therefore only be used if the value will indeed be empty). 
-             *   | Value        | Representation                        | Meaning of representation          |  |--------------+---------------------------------------+------------------------------------|  | ""           | omit the field                        | defer to service (no TLSContext)   |  | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   |  | "string"     | store an empty string in the field    | defer to service (no TLSContext)   |  | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   |  | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
+             *  | Value        | Representation                        | Meaning of representation          | |--------------+---------------------------------------+------------------------------------| | ""           | omit the field                        | defer to service (no TLSContext)   | | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   | | "string"     | store an empty string in the field    | defer to service (no TLSContext)   | | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   | | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
              *  If the meaning of the representation contradicts anything else (if a TLSContext is to be used, or in the case of "bool:true" if TLS is not to be originated), then this field is ignored.
              */
             tls?: pulumi.Input<string>;
@@ -1175,7 +1523,7 @@ export namespace getambassador {
             address?: pulumi.Input<string>;
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -1222,7 +1570,7 @@ export namespace getambassador {
             serviceScheme?: pulumi.Input<string>;
             /**
              * TLS controls whether and how to represent the "tls" field when its value could be implied by the "service" field.  In v2, there were a lot of different ways to spell an "empty" value, and this field specifies which way to spell it (and will therefore only be used if the value will indeed be empty). 
-             *   | Value        | Representation                        | Meaning of representation          |  |--------------+---------------------------------------+------------------------------------|  | ""           | omit the field                        | defer to service (no TLSContext)   |  | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   |  | "string"     | store an empty string in the field    | defer to service (no TLSContext)   |  | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   |  | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
+             *  | Value        | Representation                        | Meaning of representation          | |--------------+---------------------------------------+------------------------------------| | ""           | omit the field                        | defer to service (no TLSContext)   | | "null"       | store an explicit "null" in the field | defer to service (no TLSContext)   | | "string"     | store an empty string in the field    | defer to service (no TLSContext)   | | "bool:false" | store a Boolean "false" in the field  | defer to service (no TLSContext)   | | "bool:true"  | store a Boolean "true" in the field   | originate TLS (no TLSContext)      | 
              *  If the meaning of the representation contradicts anything else (if a TLSContext is to be used, or in the case of "bool:true" if TLS is not to be originated), then this field is ignored.
              */
             tls?: pulumi.Input<string>;
@@ -1235,7 +1583,7 @@ export namespace getambassador {
             alpn_protocols?: pulumi.Input<string>;
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
@@ -1262,7 +1610,7 @@ export namespace getambassador {
         export interface TracingServiceSpecArgs {
             /**
              * AmbassadorID declares which Ambassador instances should pay attention to this resource. If no value is provided, the default is: 
-             *  	ambassador_id: 	- "default" 
+             *  ambassador_id: - "default" 
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;

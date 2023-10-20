@@ -22,7 +22,7 @@ export class InterceptSpecification extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:getambassador.io/v1alpha1:InterceptSpecification';
+    public static readonly __pulumiType = 'kubernetes:getambassador.io/v1alpha2:InterceptSpecification';
 
     /**
      * Returns true if the given object is an instance of InterceptSpecification.  This is designed to work even
@@ -35,13 +35,13 @@ export class InterceptSpecification extends pulumi.CustomResource {
         return obj['__pulumiType'] === InterceptSpecification.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"getambassador.io/v1alpha1" | undefined>;
+    public readonly apiVersion!: pulumi.Output<"getambassador.io/v1alpha2" | undefined>;
     public readonly kind!: pulumi.Output<"InterceptSpecification" | undefined>;
     public readonly metadata!: pulumi.Output<ObjectMeta | undefined>;
     /**
      * The Intercept Specification defines Telepresence intercepts.
      */
-    public readonly spec!: pulumi.Output<outputs.getambassador.v1alpha1.InterceptSpecificationSpec | undefined>;
+    public readonly spec!: pulumi.Output<outputs.getambassador.v1alpha2.InterceptSpecificationSpec | undefined>;
 
     /**
      * Create a InterceptSpecification resource with the given unique name, arguments, and options.
@@ -54,7 +54,7 @@ export class InterceptSpecification extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "getambassador.io/v1alpha1";
+            resourceInputs["apiVersion"] = "getambassador.io/v1alpha2";
             resourceInputs["kind"] = "InterceptSpecification";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -73,11 +73,11 @@ export class InterceptSpecification extends pulumi.CustomResource {
  * The set of arguments for constructing a InterceptSpecification resource.
  */
 export interface InterceptSpecificationArgs {
-    apiVersion?: pulumi.Input<"getambassador.io/v1alpha1">;
+    apiVersion?: pulumi.Input<"getambassador.io/v1alpha2">;
     kind?: pulumi.Input<"InterceptSpecification">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**
      * The Intercept Specification defines Telepresence intercepts.
      */
-    spec?: pulumi.Input<inputs.getambassador.v1alpha1.InterceptSpecificationSpecArgs>;
+    spec?: pulumi.Input<inputs.getambassador.v1alpha2.InterceptSpecificationSpecArgs>;
 }

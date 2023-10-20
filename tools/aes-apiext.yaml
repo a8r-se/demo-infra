@@ -6,6 +6,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: emissary-system
+---
 ################################################################################
 # ServiceAccount                                                               #
 ################################################################################
@@ -20,6 +21,7 @@ metadata:
     app.kubernetes.io/managed-by: kubectl_apply_-f_aes-apiext.yaml
     app.kubernetes.io/name: emissary-apiext
     app.kubernetes.io/part-of: emissary-apiext
+---
 ################################################################################
 # Cluster permissions                                                          #
 ################################################################################
@@ -57,6 +59,8 @@ rules:
       - tcpmappings.getambassador.io
       - tlscontexts.getambassador.io
       - tracingservices.getambassador.io
+      - webapplicationfirewallpolicies.gateway.getambassador.io
+      - webapplicationfirewalls.gateway.getambassador.io
     verbs: [ "update" ]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -76,6 +80,7 @@ subjects:
   - kind: ServiceAccount
     namespace: emissary-system
     name: emissary-apiext
+---
 ################################################################################
 # Namespaced permissions                                                       #
 ################################################################################
@@ -117,6 +122,7 @@ subjects:
 - kind: ServiceAccount
   namespace: emissary-system
   name: emissary-apiext
+---
 ################################################################################
 # Main                                                                         #
 ################################################################################
@@ -170,7 +176,7 @@ spec:
       serviceAccountName: emissary-apiext
       containers:
         - name: emissary-apiext
-          image: docker.io/datawire/aes:3.5.1
+          image: docker.io/datawire/aes:3.7.0
           imagePullPolicy: IfNotPresent
           command: [ "apiext", "emissary-apiext" ]
           ports:

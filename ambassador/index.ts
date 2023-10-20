@@ -125,7 +125,7 @@ export const edgeStackRedisDeployment = new k8s.apps.v1.Deployment('edge-stack-r
 
 export const chart = new helm.v3.Chart('edge-stack',{
   chart: 'edge-stack',
-  version: '8.5.1',
+  version: '8.7.0',
   namespace: ambassadorNamespace.metadata.name,
   fetchOpts: {
     repo: 'https://s3.amazonaws.com/datawire-static-files/charts',
