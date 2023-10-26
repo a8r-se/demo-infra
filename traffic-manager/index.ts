@@ -10,7 +10,7 @@ export const interceptCRDs = new k8s.yaml.ConfigFile('telepresence-crds', {
 export const chart = new k8s.helm.v3.Release('traffic-manager', {
   name: 'traffic-manager',
   chart: 'telepresence',
-  version: '2.14.1',
+  version: '2.16.1',
   namespace: ambassador.ambassadorNamespace.metadata.name,
   repositoryOpts: {
     repo: 'https://app.getambassador.io'

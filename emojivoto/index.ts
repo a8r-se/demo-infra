@@ -454,7 +454,7 @@ export const emojiDomain = new aws.route53.Record('demo', {
   zoneId: config.require('route53ZoneId'),
   name: config.require('hostPrefix'),
   type: 'A',
-  records: [ambassador.publicIp],
+  records: [ambassador.publicURL],
   ttl: 300,
   allowOverwrite: true,
 }, { dependsOn: [ambassador.chart, ambassador.apiext] })

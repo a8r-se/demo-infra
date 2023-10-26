@@ -24,7 +24,7 @@ After creating the new stack, set up the following config values.  Set with `pul
 
 Requires the following secret value.  Set with `pulumi config --secret <key> <value>`
 
-- `cloudConnectToken`: The un-base64 encoded cloud connect token value from Ambassador Cloud.  Go to `https://app.getambassador.io/cloud/clusters`, login and select "Add Cluster:Namespace" and create a cloud token.
+- `cloudConnectToken`: The base64 encoded cloud connect token value from Ambassador Cloud.  Go to `https://app.getambassador.io/cloud/clusters`, login and select "Add Cluster:Namespace" and create a cloud token.
 
 Finally, run `pulumi up` to pull up your new Edge Stack + TP stack!
 
