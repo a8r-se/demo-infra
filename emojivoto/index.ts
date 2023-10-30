@@ -452,9 +452,9 @@ export const voteBotDeployment = new k8s.apps.v1.Deployment('vote-bot', {
 
 export const emojiDomain = new aws.route53.Record('demo', {
   zoneId: config.require('route53ZoneId'),
-  name: config.require('hostPrefix'),
+  name: config.require('emojiHostPrefix'),
   type: 'A',
-  records: [ambassador.publicURL],
+  records: [ambassador.publicIp],
   ttl: 300,
   allowOverwrite: true,
 }, { dependsOn: [ambassador.chart, ambassador.apiext] })
@@ -482,6 +482,27 @@ export const emojiMapping = new ambassadorCRDs.getambassador.v3alpha1.Mapping('e
     prefix: '/',
     service: 'web.emojivoto:http',
   }
+}, { provider: cluster.provider, dependsOn: [emojiHost, emojiDomain, ambassador.apiext] })
+
+export const voteMapping = new ambassadorCRDs.getambassador.v3alpha1.Mapping('vote-mapping', {
+  metadata: {
+    name: 'vote-mapping',
+    namespace: namespace.metadata.name,
+  },
+  spec: {
+    hostname: emojiDomain.fqdn,
+    prefix: '/api/vote',
+    service: 'web.emojivoto:http',
+    labels: {
+      ambassador: [{
+        request_label_group: [{
+          remote_address: {
+            key: 'remote_address'
+          }
+        }]
+      }]
+    },
+  },
 }, { provider: cluster.provider, dependsOn: [emojiHost, emojiDomain, ambassador.apiext] })
 
 export const emojiWebSpec = new telepresenceCRDs.getambassador.v1alpha2.InterceptSpecification('emoji-web-spec', {
