@@ -29,4 +29,4 @@ const _module = {
         }
     },
 };
-pulumi.runtime.registerResourceModule("aescrds", "gateway.getambassador.io/v1alpha1", _module)
+pulumi.runtime.registerResourceModule("crds", "gateway.getambassador.io/v1alpha1", _module)

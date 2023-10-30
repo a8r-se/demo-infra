@@ -134,4 +134,4 @@ const _module = {
         }
     },
 };
-pulumi.runtime.registerResourceModule("aescrds", "getambassador.io/v3alpha1", _module)
+pulumi.runtime.registerResourceModule("crds", "getambassador.io/v3alpha1", _module)

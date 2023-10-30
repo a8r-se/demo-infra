@@ -21,7 +21,7 @@ export {
     getambassador,
     types,
 };
-pulumi.runtime.registerResourcePackage("aescrds", {
+pulumi.runtime.registerResourcePackage("crds", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {
         if (type !== "pulumi:providers:crds") {

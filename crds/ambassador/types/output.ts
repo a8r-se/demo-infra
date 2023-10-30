@@ -18,7 +18,7 @@ export namespace gateway {
             /**
              * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
              */
-            ambassadorSelector?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecAmbassadorselector;
+            ambassadorSelector?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecAmbassadorSelector;
             /**
              * Set of matching rules that are checked against incoming request to determine which set of WebApplicationFirewalls to apply. If no matches are found then the request is allowed through to the upstream service.
              */
@@ -28,7 +28,7 @@ export namespace gateway {
         /**
          * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
          */
-        export interface WebApplicationFirewallPolicySpecAmbassadorselector {
+        export interface WebApplicationFirewallPolicySpecAmbassadorSelector {
             /**
              * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
              */
@@ -46,11 +46,11 @@ export namespace gateway {
             /**
              * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
              */
-            ifRequestHeader?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesIfrequestheader;
+            ifRequestHeader?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesIfRequestHeader;
             /**
              * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
              */
-            onError?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesOnerror;
+            onError?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesOnError;
             /**
              * A "glob-string" that matches on the request path. If not provided then it will match on all incoming requests.
              */
@@ -62,7 +62,7 @@ export namespace gateway {
             /**
              * References a WebApplicationFirewall that will be applied to the incoming request.
              */
-            wafRef: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesWafref;
+            wafRef: outputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesWafRef;
         }
         /**
          * webApplicationFirewallPolicySpecRulesProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRules
@@ -71,7 +71,7 @@ export namespace gateway {
             return {
                 ...val,
                 host: (val.host) ?? "*",
-                ifRequestHeader: (val.ifRequestHeader ? outputs.gateway.v1alpha1.webApplicationFirewallPolicySpecRulesIfrequestheaderProvideDefaults(val.ifRequestHeader) : undefined),
+                ifRequestHeader: (val.ifRequestHeader ? outputs.gateway.v1alpha1.webApplicationFirewallPolicySpecRulesIfRequestHeaderProvideDefaults(val.ifRequestHeader) : undefined),
                 path: (val.path) ?? "*",
             };
         }
@@ -79,7 +79,7 @@ export namespace gateway {
         /**
          * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
          */
-        export interface WebApplicationFirewallPolicySpecRulesIfrequestheader {
+        export interface WebApplicationFirewallPolicySpecRulesIfRequestHeader {
             /**
              * Name of the HTTP Header to be matched. Name matching MUST be case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2). 
              *  Valid values include: 
@@ -105,9 +105,9 @@ export namespace gateway {
             value?: string;
         }
         /**
-         * webApplicationFirewallPolicySpecRulesIfrequestheaderProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesIfrequestheader
+         * webApplicationFirewallPolicySpecRulesIfRequestHeaderProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesIfRequestHeader
          */
-        export function webApplicationFirewallPolicySpecRulesIfrequestheaderProvideDefaults(val: WebApplicationFirewallPolicySpecRulesIfrequestheader): WebApplicationFirewallPolicySpecRulesIfrequestheader {
+        export function webApplicationFirewallPolicySpecRulesIfRequestHeaderProvideDefaults(val: WebApplicationFirewallPolicySpecRulesIfRequestHeader): WebApplicationFirewallPolicySpecRulesIfRequestHeader {
             return {
                 ...val,
                 type: (val.type) ?? "Exact",
@@ -117,7 +117,7 @@ export namespace gateway {
         /**
          * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
          */
-        export interface WebApplicationFirewallPolicySpecRulesOnerror {
+        export interface WebApplicationFirewallPolicySpecRulesOnError {
             /**
              * statusCode sets the HTTP status code to use when denying the request.
              */
@@ -127,7 +127,7 @@ export namespace gateway {
         /**
          * References a WebApplicationFirewall that will be applied to the incoming request.
          */
-        export interface WebApplicationFirewallPolicySpecRulesWafref {
+        export interface WebApplicationFirewallPolicySpecRulesWafRef {
             /**
              * Name of the WebApplicationFirewall
              */
@@ -153,7 +153,7 @@ export namespace gateway {
              *  * "Accepted" * "Ready" * "Rejected" - if any rules have an error then the whole WebApplicationFirewallPolicy will be rejected.
              */
             conditions?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusConditions[];
-            ruleStatuses?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatuses[];
+            ruleStatuses?: outputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRuleStatuses[];
         }
 
         /**
@@ -191,11 +191,11 @@ export namespace gateway {
         /**
          * Describes the status of a Rule within a WebApplicationFirewallPolicy.
          */
-        export interface WebApplicationFirewallPolicyStatusRulestatuses {
+        export interface WebApplicationFirewallPolicyStatusRuleStatuses {
             /**
              * conditions describe the current state of this Rule.
              */
-            conditions: outputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatusesConditions[];
+            conditions: outputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRuleStatusesConditions[];
             /**
              * host of the rule with the error.
              */
@@ -215,7 +215,7 @@ export namespace gateway {
          *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
          *  // other fields }
          */
-        export interface WebApplicationFirewallPolicyStatusRulestatusesConditions {
+        export interface WebApplicationFirewallPolicyStatusRuleStatusesConditions {
             /**
              * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
              */
@@ -249,8 +249,8 @@ export namespace gateway {
             /**
              * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
              */
-            ambassadorSelector?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecAmbassadorselector;
-            firewallRules: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrules[];
+            ambassadorSelector?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecAmbassadorSelector;
+            firewallRules: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRules[];
             /**
              * Provides a way to configure additional logging in the Edge Stack pods for the WebApplicationFirewall. This is in addition to the logging config that is available via the firewall configuration files. The following logs will always be output to the container logs when enabled.
              */
@@ -260,7 +260,7 @@ export namespace gateway {
         /**
          * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
          */
-        export interface WebApplicationFirewallSpecAmbassadorselector {
+        export interface WebApplicationFirewallSpecAmbassadorSelector {
             /**
              * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
              */
@@ -270,11 +270,11 @@ export namespace gateway {
         /**
          * Contains configuration for where to load rules for a specific WebApplicationFirewall.
          */
-        export interface WebApplicationFirewallSpecFirewallrules {
+        export interface WebApplicationFirewallSpecFirewallRules {
             /**
              * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
              */
-            configMapRef?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesConfigmapref;
+            configMapRef?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRulesConfigMapRef;
             /**
              * Provides a path to a file or directory on the Edge Stack pod to load rules configuration from
              */
@@ -282,7 +282,7 @@ export namespace gateway {
             /**
              * Configures downloading firewall rules from the internet via an HTTP request
              */
-            http?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesHttp;
+            http?: outputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRulesHttp;
             /**
              * Indicates the method that we will use to load rules configuration for the WebApplicationFirewall
              */
@@ -292,7 +292,7 @@ export namespace gateway {
         /**
          * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
          */
-        export interface WebApplicationFirewallSpecFirewallrulesConfigmapref {
+        export interface WebApplicationFirewallSpecFirewallRulesConfigMapRef {
             /**
              * Key for the field in the configmap that should be use
              */
@@ -316,7 +316,7 @@ export namespace gateway {
         /**
          * Configures downloading firewall rules from the internet via an HTTP request
          */
-        export interface WebApplicationFirewallSpecFirewallrulesHttp {
+        export interface WebApplicationFirewallSpecFirewallRulesHttp {
             /**
              * Provides the address to download the firewall rules from.
              */
@@ -330,13 +330,13 @@ export namespace gateway {
             /**
              * Controls logging behavior when the WebApplicationFirewall interrupts a request.
              */
-            onInterrupt: outputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingOninterrupt;
+            onInterrupt: outputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingOnInterrupt;
         }
 
         /**
          * Controls logging behavior when the WebApplicationFirewall interrupts a request.
          */
-        export interface WebApplicationFirewallSpecLoggingOninterrupt {
+        export interface WebApplicationFirewallSpecLoggingOnInterrupt {
             /**
              * Configures whether the container should output logs. These additional logs are not enabled unless this is set to `true`
              */
@@ -455,9 +455,9 @@ export namespace getambassador {
              * TODO(lukeshu): In v3alpha2, consider renameing `auth_service` to just `service`, for consistency with the other resource types.
              */
             auth_service: string;
-            circuit_breakers?: outputs.getambassador.v3alpha1.AuthServiceSpecCircuit_breakers[];
+            circuit_breakers?: outputs.getambassador.v3alpha1.AuthServiceSpecCircuitBreakers[];
             failure_mode_allow?: boolean;
-            include_body?: outputs.getambassador.v3alpha1.AuthServiceSpecInclude_body;
+            include_body?: outputs.getambassador.v3alpha1.AuthServiceSpecIncludeBody;
             path_prefix?: string;
             proto?: string;
             /**
@@ -468,16 +468,16 @@ export namespace getambassador {
             /**
              * TODO(lukeshu): In v3alpha2, consider getting rid of this struct type in favor of just using an int (i.e. `statusOnError: 500` instead of the current `statusOnError: { code: 500 }`).
              */
-            status_on_error?: outputs.getambassador.v3alpha1.AuthServiceSpecStatus_on_error;
+            status_on_error?: outputs.getambassador.v3alpha1.AuthServiceSpecStatusOnError;
             timeout_ms?: number;
             tls?: string;
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: outputs.getambassador.v3alpha1.AuthServiceSpecV2explicittls;
+            v2ExplicitTLS?: outputs.getambassador.v3alpha1.AuthServiceSpecV2ExplicitTLS;
         }
 
-        export interface AuthServiceSpecCircuit_breakers {
+        export interface AuthServiceSpecCircuitBreakers {
             max_connections?: number;
             max_pending_requests?: number;
             max_requests?: number;
@@ -485,7 +485,7 @@ export namespace getambassador {
             priority?: string;
         }
 
-        export interface AuthServiceSpecInclude_body {
+        export interface AuthServiceSpecIncludeBody {
             allow_partial: boolean;
             /**
              * These aren't pointer types because they are required.
@@ -496,14 +496,14 @@ export namespace getambassador {
         /**
          * TODO(lukeshu): In v3alpha2, consider getting rid of this struct type in favor of just using an int (i.e. `statusOnError: 500` instead of the current `statusOnError: { code: 500 }`).
          */
-        export interface AuthServiceSpecStatus_on_error {
+        export interface AuthServiceSpecStatusOnError {
             code?: number;
         }
 
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface AuthServiceSpecV2explicittls {
+        export interface AuthServiceSpecV2ExplicitTLS {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -630,7 +630,7 @@ export namespace getambassador {
             /**
              * Specifies whether/who to talk ACME with to automatically manage the $tlsSecret.
              */
-            acmeProvider?: outputs.getambassador.v3alpha1.HostSpecAcmeprovider;
+            acmeProvider?: outputs.getambassador.v3alpha1.HostSpecAcmeProvider;
             /**
              * Common to all Ambassador objects (and optional).
              */
@@ -642,15 +642,15 @@ export namespace getambassador {
             /**
              * Selector for Mappings we'll associate with this Host. At the moment, Selector and MappingSelector are synonyms, but that will change soon.
              */
-            mappingSelector?: outputs.getambassador.v3alpha1.HostSpecMappingselector;
+            mappingSelector?: outputs.getambassador.v3alpha1.HostSpecMappingSelector;
             /**
              * Configuration for the Preview URL feature of Service Preview. Defaults to preview URLs not enabled.
              */
-            previewUrl?: outputs.getambassador.v3alpha1.HostSpecPreviewurl;
+            previewUrl?: outputs.getambassador.v3alpha1.HostSpecPreviewUrl;
             /**
              * Request policy definition.
              */
-            requestPolicy?: outputs.getambassador.v3alpha1.HostSpecRequestpolicy;
+            requestPolicy?: outputs.getambassador.v3alpha1.HostSpecRequestPolicy;
             /**
              * DEPRECATED: Selector by which we can find further configuration. Use MappingSelector instead. 
              *  TODO(lukeshu): In v3alpha2, figure out how to get rid of HostSpec.DeprecatedSelector.
@@ -664,17 +664,17 @@ export namespace getambassador {
              * Name of the TLSContext the Host resource is linked with. It is not valid to specify both `tlsContext` and `tls`. 
              *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
              */
-            tlsContext?: outputs.getambassador.v3alpha1.HostSpecTlscontext;
+            tlsContext?: outputs.getambassador.v3alpha1.HostSpecTlsContext;
             /**
              * Name of the Kubernetes secret into which to save generated certificates.  If ACME is enabled (see $acmeProvider), then the default is $hostname; otherwise the default is "".  If the value is "", then we do not do TLS for this Host.
              */
-            tlsSecret?: outputs.getambassador.v3alpha1.HostSpecTlssecret;
+            tlsSecret?: outputs.getambassador.v3alpha1.HostSpecTlsSecret;
         }
 
         /**
          * Specifies whether/who to talk ACME with to automatically manage the $tlsSecret.
          */
-        export interface HostSpecAcmeprovider {
+        export interface HostSpecAcmeProvider {
             /**
              * Specifies who to talk ACME with to get certs. Defaults to Let's Encrypt; if "none" (case-insensitive), do not try to do ACME for this Host.
              */
@@ -684,7 +684,7 @@ export namespace getambassador {
              * Specifies the Kubernetes Secret to use to store the private key of the ACME account (essentially, where to store the auto-generated password for the auto-created ACME account).  You should not normally need to set this--the default value is based on a combination of the ACME authority being registered wit and the email address associated with the account. 
              *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
              */
-            privateKeySecret?: outputs.getambassador.v3alpha1.HostSpecAcmeproviderPrivatekeysecret;
+            privateKeySecret?: outputs.getambassador.v3alpha1.HostSpecAcmeProviderPrivateKeySecret;
             /**
              * This is normally set automatically
              */
@@ -695,7 +695,7 @@ export namespace getambassador {
          * Specifies the Kubernetes Secret to use to store the private key of the ACME account (essentially, where to store the auto-generated password for the auto-created ACME account).  You should not normally need to set this--the default value is based on a combination of the ACME authority being registered wit and the email address associated with the account. 
          *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
          */
-        export interface HostSpecAcmeproviderPrivatekeysecret {
+        export interface HostSpecAcmeProviderPrivateKeySecret {
             /**
              * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
              */
@@ -705,11 +705,11 @@ export namespace getambassador {
         /**
          * Selector for Mappings we'll associate with this Host. At the moment, Selector and MappingSelector are synonyms, but that will change soon.
          */
-        export interface HostSpecMappingselector {
+        export interface HostSpecMappingSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.getambassador.v3alpha1.HostSpecMappingselectorMatchexpressions[];
+            matchExpressions?: outputs.getambassador.v3alpha1.HostSpecMappingSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -719,7 +719,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface HostSpecMappingselectorMatchexpressions {
+        export interface HostSpecMappingSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -737,7 +737,7 @@ export namespace getambassador {
         /**
          * Configuration for the Preview URL feature of Service Preview. Defaults to preview URLs not enabled.
          */
-        export interface HostSpecPreviewurl {
+        export interface HostSpecPreviewUrl {
             /**
              * Is the Preview URL feature enabled?
              */
@@ -751,11 +751,11 @@ export namespace getambassador {
         /**
          * Request policy definition.
          */
-        export interface HostSpecRequestpolicy {
-            insecure?: outputs.getambassador.v3alpha1.HostSpecRequestpolicyInsecure;
+        export interface HostSpecRequestPolicy {
+            insecure?: outputs.getambassador.v3alpha1.HostSpecRequestPolicyInsecure;
         }
 
-        export interface HostSpecRequestpolicyInsecure {
+        export interface HostSpecRequestPolicyInsecure {
             action?: string;
             additionalPort?: number;
         }
@@ -768,7 +768,7 @@ export namespace getambassador {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.getambassador.v3alpha1.HostSpecSelectorMatchexpressions[];
+            matchExpressions?: outputs.getambassador.v3alpha1.HostSpecSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -778,7 +778,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface HostSpecSelectorMatchexpressions {
+        export interface HostSpecSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -816,7 +816,7 @@ export namespace getambassador {
          * Name of the TLSContext the Host resource is linked with. It is not valid to specify both `tlsContext` and `tls`. 
          *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
          */
-        export interface HostSpecTlscontext {
+        export interface HostSpecTlsContext {
             /**
              * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
              */
@@ -826,7 +826,7 @@ export namespace getambassador {
         /**
          * Name of the Kubernetes secret into which to save generated certificates.  If ACME is enabled (see $acmeProvider), then the default is $hostname; otherwise the default is "".  If the value is "", then we do not do TLS for this Host.
          */
-        export interface HostSpecTlssecret {
+        export interface HostSpecTlsSecret {
             /**
              * name is unique within a namespace to reference a secret resource.
              */
@@ -896,7 +896,7 @@ export namespace getambassador {
             /**
              * HostBinding allows restricting which Hosts will be used for this Listener.
              */
-            hostBinding: outputs.getambassador.v3alpha1.ListenerSpecHostbinding;
+            hostBinding: outputs.getambassador.v3alpha1.ListenerSpecHostBinding;
             /**
              * L7Depth specifies how many layer 7 load balancers are between us and the edge of the network.
              */
@@ -926,21 +926,21 @@ export namespace getambassador {
         /**
          * HostBinding allows restricting which Hosts will be used for this Listener.
          */
-        export interface ListenerSpecHostbinding {
+        export interface ListenerSpecHostBinding {
             /**
              * NamespaceBindingType defines we we specify which namespaces to look for Hosts in.
              */
-            namespace?: outputs.getambassador.v3alpha1.ListenerSpecHostbindingNamespace;
+            namespace?: outputs.getambassador.v3alpha1.ListenerSpecHostBindingNamespace;
             /**
              * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
              */
-            selector?: outputs.getambassador.v3alpha1.ListenerSpecHostbindingSelector;
+            selector?: outputs.getambassador.v3alpha1.ListenerSpecHostBindingSelector;
         }
 
         /**
          * NamespaceBindingType defines we we specify which namespaces to look for Hosts in.
          */
-        export interface ListenerSpecHostbindingNamespace {
+        export interface ListenerSpecHostBindingNamespace {
             /**
              * NamespaceFromType defines how we evaluate a NamespaceBindingType.
              */
@@ -950,11 +950,11 @@ export namespace getambassador {
         /**
          * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
          */
-        export interface ListenerSpecHostbindingSelector {
+        export interface ListenerSpecHostBindingSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.getambassador.v3alpha1.ListenerSpecHostbindingSelectorMatchexpressions[];
+            matchExpressions?: outputs.getambassador.v3alpha1.ListenerSpecHostBindingSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -964,7 +964,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ListenerSpecHostbindingSelectorMatchexpressions {
+        export interface ListenerSpecHostBindingSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -990,7 +990,7 @@ export namespace getambassador {
              */
             ambassador_id?: string[];
             driver?: string;
-            driver_config?: outputs.getambassador.v3alpha1.LogServiceSpecDriver_config;
+            driver_config?: outputs.getambassador.v3alpha1.LogServiceSpecDriverConfig;
             flush_interval_byte_size?: number;
             flush_interval_time?: number;
             /**
@@ -1005,11 +1005,11 @@ export namespace getambassador {
             stats_name?: string;
         }
 
-        export interface LogServiceSpecDriver_config {
-            additional_log_headers?: outputs.getambassador.v3alpha1.LogServiceSpecDriver_configAdditional_log_headers[];
+        export interface LogServiceSpecDriverConfig {
+            additional_log_headers?: outputs.getambassador.v3alpha1.LogServiceSpecDriverConfigAdditionalLogHeaders[];
         }
 
-        export interface LogServiceSpecDriver_configAdditional_log_headers {
+        export interface LogServiceSpecDriverConfigAdditionalLogHeaders {
             during_request?: boolean;
             during_response?: boolean;
             during_trailer?: boolean;
@@ -1021,8 +1021,8 @@ export namespace getambassador {
          */
         export interface MappingSpec {
             add_linkerd_headers?: boolean;
-            add_request_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecAdd_request_headers};
-            add_response_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecAdd_response_headers};
+            add_request_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecAddRequestHeaders};
+            add_response_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecAddResponseHeaders};
             /**
              * A case-insensitive list of the non-HTTP protocols to allow "upgrading" to from HTTP via the "Connection: upgrade" mechanism[1].  After the upgrade, Ambassador does not interpret the traffic, and behaves similarly to how it does for TCPMappings. 
              *  [1]: https://tools.ietf.org/html/rfc7230#section-6.7 
@@ -1046,7 +1046,7 @@ export namespace getambassador {
              */
             bypass_error_response_overrides?: boolean;
             case_sensitive?: boolean;
-            circuit_breakers?: outputs.getambassador.v3alpha1.MappingSpecCircuit_breakers[];
+            circuit_breakers?: outputs.getambassador.v3alpha1.MappingSpecCircuitBreakers[];
             cluster_idle_timeout_ms?: number;
             cluster_max_connection_lifetime_ms?: number;
             cluster_tag?: string;
@@ -1063,10 +1063,10 @@ export namespace getambassador {
             /**
              * Error response overrides for this Mapping. Replaces all of the `error_response_overrides` set on the Ambassador module, if any.
              */
-            error_response_overrides?: outputs.getambassador.v3alpha1.MappingSpecError_response_overrides[];
+            error_response_overrides?: outputs.getambassador.v3alpha1.MappingSpecErrorResponseOverrides[];
             grpc?: boolean;
             headers?: {[key: string]: string};
-            health_checks?: outputs.getambassador.v3alpha1.MappingSpecHealth_checks[];
+            health_checks?: outputs.getambassador.v3alpha1.MappingSpecHealthChecks[];
             /**
              * Exact match for the hostname of a request if HostRegex is false; regex match for the hostname if HostRegex is true. 
              *  Host specifies both a match for the ':authority' header of a request, as well as a match criterion for Host CRDs: a Mapping that specifies Host will not associate with a Host that doesn't have a matching Hostname. 
@@ -1094,7 +1094,7 @@ export namespace getambassador {
              * A DomainMap is the overall Mapping.spec.Labels type. It maps domains (kind of like namespaces for Mapping labels) to arrays of label groups.
              */
             labels?: {[key: string]: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecLabels[]}[]};
-            load_balancer?: outputs.getambassador.v3alpha1.MappingSpecLoad_balancer;
+            load_balancer?: outputs.getambassador.v3alpha1.MappingSpecLoadBalancer;
             method?: string;
             method_regex?: boolean;
             modules?: {[key: string]: any}[];
@@ -1122,13 +1122,13 @@ export namespace getambassador {
             /**
              * Prefix regex rewrite to use when generating an HTTP redirect. Used with `host_redirect`.
              */
-            regex_redirect?: outputs.getambassador.v3alpha1.MappingSpecRegex_redirect;
-            regex_rewrite?: outputs.getambassador.v3alpha1.MappingSpecRegex_rewrite;
+            regex_redirect?: outputs.getambassador.v3alpha1.MappingSpecRegexRedirect;
+            regex_rewrite?: outputs.getambassador.v3alpha1.MappingSpecRegexRewrite;
             remove_request_headers?: string[];
             remove_response_headers?: string[];
             resolver?: string;
             respect_dns_ttl?: boolean;
-            retry_policy?: outputs.getambassador.v3alpha1.MappingSpecRetry_policy;
+            retry_policy?: outputs.getambassador.v3alpha1.MappingSpecRetryPolicy;
             rewrite?: string;
             service: string;
             shadow?: boolean;
@@ -1148,23 +1148,23 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: outputs.getambassador.v3alpha1.MappingSpecV2explicittls;
+            v2ExplicitTLS?: outputs.getambassador.v3alpha1.MappingSpecV2ExplicitTLS;
             weight?: number;
         }
 
-        export interface MappingSpecAdd_request_headers {
+        export interface MappingSpecAddRequestHeaders {
             append?: boolean;
             v2Representation?: string;
             value?: string;
         }
 
-        export interface MappingSpecAdd_response_headers {
+        export interface MappingSpecAddResponseHeaders {
             append?: boolean;
             v2Representation?: string;
             value?: string;
         }
 
-        export interface MappingSpecCircuit_breakers {
+        export interface MappingSpecCircuitBreakers {
             max_connections?: number;
             max_pending_requests?: number;
             max_requests?: number;
@@ -1196,11 +1196,11 @@ export namespace getambassador {
         /**
          * A response rewrite for an HTTP error response
          */
-        export interface MappingSpecError_response_overrides {
+        export interface MappingSpecErrorResponseOverrides {
             /**
              * The new response body
              */
-            body: outputs.getambassador.v3alpha1.MappingSpecError_response_overridesBody;
+            body: outputs.getambassador.v3alpha1.MappingSpecErrorResponseOverridesBody;
             /**
              * The status code to match on -- not a pointer because it's required.
              */
@@ -1210,7 +1210,7 @@ export namespace getambassador {
         /**
          * The new response body
          */
-        export interface MappingSpecError_response_overridesBody {
+        export interface MappingSpecErrorResponseOverridesBody {
             /**
              * The content type to set on the error response body when using text_format or text_format_source. Defaults to 'text/plain'.
              */
@@ -1226,13 +1226,13 @@ export namespace getambassador {
             /**
              * A format string sourced from a file on the Ambassador container. Useful for larger response bodies that should not be placed inline in configuration.
              */
-            text_format_source?: outputs.getambassador.v3alpha1.MappingSpecError_response_overridesBodyText_format_source;
+            text_format_source?: outputs.getambassador.v3alpha1.MappingSpecErrorResponseOverridesBodyTextFormatSource;
         }
 
         /**
          * A format string sourced from a file on the Ambassador container. Useful for larger response bodies that should not be placed inline in configuration.
          */
-        export interface MappingSpecError_response_overridesBodyText_format_source {
+        export interface MappingSpecErrorResponseOverridesBodyTextFormatSource {
             /**
              * The name of a file on the Ambassador pod that contains a format text string.
              */
@@ -1242,11 +1242,11 @@ export namespace getambassador {
         /**
          * HealthCheck specifies settings for performing active health checking on upstreams
          */
-        export interface MappingSpecHealth_checks {
+        export interface MappingSpecHealthChecks {
             /**
              * Configuration for where the healthcheck request should be made to
              */
-            health_check: outputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_check;
+            health_check: outputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheck;
             /**
              * Number of expected responses for the upstream to be considered healthy. Defaults to 1.
              */
@@ -1268,21 +1268,21 @@ export namespace getambassador {
         /**
          * Configuration for where the healthcheck request should be made to
          */
-        export interface MappingSpecHealth_checksHealth_check {
+        export interface MappingSpecHealthChecksHealthCheck {
             /**
              * HealthCheck for gRPC upstreams. Only one of grpc_health_check or http_health_check may be specified
              */
-            grpc?: outputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkGrpc;
+            grpc?: outputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckGrpc;
             /**
              * HealthCheck for HTTP upstreams. Only one of http_health_check or grpc_health_check may be specified
              */
-            http?: outputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttp;
+            http?: outputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttp;
         }
 
         /**
          * HealthCheck for gRPC upstreams. Only one of grpc_health_check or http_health_check may be specified
          */
-        export interface MappingSpecHealth_checksHealth_checkGrpc {
+        export interface MappingSpecHealthChecksHealthCheckGrpc {
             /**
              * The value of the :authority header in the gRPC health check request. If left empty the upstream name will be used.
              */
@@ -1296,15 +1296,15 @@ export namespace getambassador {
         /**
          * HealthCheck for HTTP upstreams. Only one of http_health_check or grpc_health_check may be specified
          */
-        export interface MappingSpecHealth_checksHealth_checkHttp {
-            add_request_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttpAdd_request_headers};
-            expected_statuses?: outputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttpExpected_statuses[];
+        export interface MappingSpecHealthChecksHealthCheckHttp {
+            add_request_headers?: {[key: string]: outputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttpAddRequestHeaders};
+            expected_statuses?: outputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttpExpectedStatuses[];
             hostname?: string;
             path: string;
             remove_request_headers?: string[];
         }
 
-        export interface MappingSpecHealth_checksHealth_checkHttpAdd_request_headers {
+        export interface MappingSpecHealthChecksHealthCheckHttpAddRequestHeaders {
             append?: boolean;
             v2Representation?: string;
             value?: string;
@@ -1313,7 +1313,7 @@ export namespace getambassador {
         /**
          * A range of response statuses from Start to End inclusive
          */
-        export interface MappingSpecHealth_checksHealth_checkHttpExpected_statuses {
+        export interface MappingSpecHealthChecksHealthCheckHttpExpectedStatuses {
             /**
              * End of the statuses to include. Must be between 100 and 599 (inclusive)
              */
@@ -1338,36 +1338,36 @@ export namespace getambassador {
             /**
              * Sets the label "destination_cluster=«Envoy destination cluster name»".
              */
-            destination_cluster?: outputs.getambassador.v3alpha1.MappingSpecLabelsDestination_cluster;
+            destination_cluster?: outputs.getambassador.v3alpha1.MappingSpecLabelsDestinationCluster;
             /**
              * Sets the label "«key»=«value»" (where by default «key» is "generic_key").
              */
-            generic_key?: outputs.getambassador.v3alpha1.MappingSpecLabelsGeneric_key;
+            generic_key?: outputs.getambassador.v3alpha1.MappingSpecLabelsGenericKey;
             /**
              * Sets the label "remote_address=«IP address of the client»".
              */
-            remote_address?: outputs.getambassador.v3alpha1.MappingSpecLabelsRemote_address;
+            remote_address?: outputs.getambassador.v3alpha1.MappingSpecLabelsRemoteAddress;
             /**
              * If the «header_name» header is set, then set the label "«key»=«Value of the «header_name» header»"; otherwise skip applying this label group.
              */
-            request_headers?: outputs.getambassador.v3alpha1.MappingSpecLabelsRequest_headers;
+            request_headers?: outputs.getambassador.v3alpha1.MappingSpecLabelsRequestHeaders;
             /**
              * Sets the label "source_cluster=«Envoy source cluster name»".
              */
-            source_cluster?: outputs.getambassador.v3alpha1.MappingSpecLabelsSource_cluster;
+            source_cluster?: outputs.getambassador.v3alpha1.MappingSpecLabelsSourceCluster;
         }
 
         /**
          * Sets the label "destination_cluster=«Envoy destination cluster name»".
          */
-        export interface MappingSpecLabelsDestination_cluster {
+        export interface MappingSpecLabelsDestinationCluster {
             key: string;
         }
 
         /**
          * Sets the label "«key»=«value»" (where by default «key» is "generic_key").
          */
-        export interface MappingSpecLabelsGeneric_key {
+        export interface MappingSpecLabelsGenericKey {
             /**
              * The default is "generic_key".
              */
@@ -1379,14 +1379,14 @@ export namespace getambassador {
         /**
          * Sets the label "remote_address=«IP address of the client»".
          */
-        export interface MappingSpecLabelsRemote_address {
+        export interface MappingSpecLabelsRemoteAddress {
             key: string;
         }
 
         /**
          * If the «header_name» header is set, then set the label "«key»=«Value of the «header_name» header»"; otherwise skip applying this label group.
          */
-        export interface MappingSpecLabelsRequest_headers {
+        export interface MappingSpecLabelsRequestHeaders {
             header_name: string;
             key: string;
             omit_if_not_present?: boolean;
@@ -1395,18 +1395,18 @@ export namespace getambassador {
         /**
          * Sets the label "source_cluster=«Envoy source cluster name»".
          */
-        export interface MappingSpecLabelsSource_cluster {
+        export interface MappingSpecLabelsSourceCluster {
             key: string;
         }
 
-        export interface MappingSpecLoad_balancer {
-            cookie?: outputs.getambassador.v3alpha1.MappingSpecLoad_balancerCookie;
+        export interface MappingSpecLoadBalancer {
+            cookie?: outputs.getambassador.v3alpha1.MappingSpecLoadBalancerCookie;
             header?: string;
             policy: string;
             source_ip?: boolean;
         }
 
-        export interface MappingSpecLoad_balancerCookie {
+        export interface MappingSpecLoadBalancerCookie {
             name: string;
             path?: string;
             ttl?: string;
@@ -1415,17 +1415,17 @@ export namespace getambassador {
         /**
          * Prefix regex rewrite to use when generating an HTTP redirect. Used with `host_redirect`.
          */
-        export interface MappingSpecRegex_redirect {
+        export interface MappingSpecRegexRedirect {
             pattern?: string;
             substitution?: string;
         }
 
-        export interface MappingSpecRegex_rewrite {
+        export interface MappingSpecRegexRewrite {
             pattern?: string;
             substitution?: string;
         }
 
-        export interface MappingSpecRetry_policy {
+        export interface MappingSpecRetryPolicy {
             num_retries?: number;
             per_try_timeout?: string;
             retry_on?: string;
@@ -1434,7 +1434,7 @@ export namespace getambassador {
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface MappingSpecV2explicittls {
+        export interface MappingSpecV2ExplicitTLS {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1497,13 +1497,13 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: outputs.getambassador.v3alpha1.RateLimitServiceSpecV2explicittls;
+            v2ExplicitTLS?: outputs.getambassador.v3alpha1.RateLimitServiceSpecV2ExplicitTLS;
         }
 
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface RateLimitServiceSpecV2explicittls {
+        export interface RateLimitServiceSpecV2ExplicitTLS {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1528,7 +1528,7 @@ export namespace getambassador {
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: string[];
-            circuit_breakers?: outputs.getambassador.v3alpha1.TCPMappingSpecCircuit_breakers[];
+            circuit_breakers?: outputs.getambassador.v3alpha1.TCPMappingSpecCircuitBreakers[];
             cluster_tag?: string;
             enable_ipv4?: boolean;
             enable_ipv6?: boolean;
@@ -1548,11 +1548,11 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: outputs.getambassador.v3alpha1.TCPMappingSpecV2explicittls;
+            v2ExplicitTLS?: outputs.getambassador.v3alpha1.TCPMappingSpecV2ExplicitTLS;
             weight?: number;
         }
 
-        export interface TCPMappingSpecCircuit_breakers {
+        export interface TCPMappingSpecCircuitBreakers {
             max_connections?: number;
             max_pending_requests?: number;
             max_requests?: number;
@@ -1563,7 +1563,7 @@ export namespace getambassador {
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface TCPMappingSpecV2explicittls {
+        export interface TCPMappingSpecV2ExplicitTLS {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1616,7 +1616,7 @@ export namespace getambassador {
              */
             ambassador_id?: string[];
             config?: outputs.getambassador.v3alpha1.TracingServiceSpecConfig;
-            custom_tags?: outputs.getambassador.v3alpha1.TracingServiceSpecCustom_tags[];
+            custom_tags?: outputs.getambassador.v3alpha1.TracingServiceSpecCustomTags[];
             driver: string;
             sampling?: outputs.getambassador.v3alpha1.TracingServiceSpecSampling;
             service: string;
@@ -1642,26 +1642,26 @@ export namespace getambassador {
         /**
          * TracingCustomTag provides a data structure for capturing envoy's `type.tracing.v3.CustomTag`
          */
-        export interface TracingServiceSpecCustom_tags {
+        export interface TracingServiceSpecCustomTags {
             /**
              * Environment explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            environment?: outputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsEnvironment;
+            environment?: outputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsEnvironment;
             /**
              * Literal explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            literal?: outputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsLiteral;
+            literal?: outputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsLiteral;
             /**
              * Header explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            request_header?: outputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsRequest_header;
+            request_header?: outputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsRequestHeader;
             tag: string;
         }
 
         /**
          * Environment explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsEnvironment {
+        export interface TracingServiceSpecCustomTagsEnvironment {
             default_value?: string;
             name: string;
         }
@@ -1669,14 +1669,14 @@ export namespace getambassador {
         /**
          * Literal explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsLiteral {
+        export interface TracingServiceSpecCustomTagsLiteral {
             value: string;
         }
 
         /**
          * Header explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsRequest_header {
+        export interface TracingServiceSpecCustomTagsRequestHeader {
             default_value?: string;
             name: string;
         }

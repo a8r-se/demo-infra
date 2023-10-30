@@ -18,7 +18,7 @@ export namespace gateway {
             /**
              * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
              */
-            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecAmbassadorselectorArgs>;
+            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecAmbassadorSelectorArgs>;
             /**
              * Set of matching rules that are checked against incoming request to determine which set of WebApplicationFirewalls to apply. If no matches are found then the request is allowed through to the upstream service.
              */
@@ -28,7 +28,7 @@ export namespace gateway {
         /**
          * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
          */
-        export interface WebApplicationFirewallPolicySpecAmbassadorselectorArgs {
+        export interface WebApplicationFirewallPolicySpecAmbassadorSelectorArgs {
             /**
              * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
              */
@@ -46,11 +46,11 @@ export namespace gateway {
             /**
              * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
              */
-            ifRequestHeader?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs>;
+            ifRequestHeader?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesIfRequestHeaderArgs>;
             /**
              * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
              */
-            onError?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesOnerrorArgs>;
+            onError?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesOnErrorArgs>;
             /**
              * A "glob-string" that matches on the request path. If not provided then it will match on all incoming requests.
              */
@@ -62,7 +62,7 @@ export namespace gateway {
             /**
              * References a WebApplicationFirewall that will be applied to the incoming request.
              */
-            wafRef: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesWafrefArgs>;
+            wafRef: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicySpecRulesWafRefArgs>;
         }
         /**
          * webApplicationFirewallPolicySpecRulesArgsProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesArgs
@@ -71,7 +71,7 @@ export namespace gateway {
             return {
                 ...val,
                 host: (val.host) ?? "*",
-                ifRequestHeader: (val.ifRequestHeader ? pulumi.output(val.ifRequestHeader).apply(inputs.gateway.v1alpha1.webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults) : undefined),
+                ifRequestHeader: (val.ifRequestHeader ? pulumi.output(val.ifRequestHeader).apply(inputs.gateway.v1alpha1.webApplicationFirewallPolicySpecRulesIfRequestHeaderArgsProvideDefaults) : undefined),
                 path: (val.path) ?? "*",
             };
         }
@@ -79,7 +79,7 @@ export namespace gateway {
         /**
          * Checks if exact or regular expression matches a value in a request Header to determine if the WebApplicationFirewall is executed or not.
          */
-        export interface WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs {
+        export interface WebApplicationFirewallPolicySpecRulesIfRequestHeaderArgs {
             /**
              * Name of the HTTP Header to be matched. Name matching MUST be case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2). 
              *  Valid values include: 
@@ -105,9 +105,9 @@ export namespace gateway {
             value?: pulumi.Input<string>;
         }
         /**
-         * webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs
+         * webApplicationFirewallPolicySpecRulesIfRequestHeaderArgsProvideDefaults sets the appropriate defaults for WebApplicationFirewallPolicySpecRulesIfRequestHeaderArgs
          */
-        export function webApplicationFirewallPolicySpecRulesIfrequestheaderArgsProvideDefaults(val: WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs): WebApplicationFirewallPolicySpecRulesIfrequestheaderArgs {
+        export function webApplicationFirewallPolicySpecRulesIfRequestHeaderArgsProvideDefaults(val: WebApplicationFirewallPolicySpecRulesIfRequestHeaderArgs): WebApplicationFirewallPolicySpecRulesIfRequestHeaderArgs {
             return {
                 ...val,
                 type: (val.type) ?? "Exact",
@@ -117,7 +117,7 @@ export namespace gateway {
         /**
          * Provides a way to configure how requests are handled when a request matches the rule but there is a configuration or runtime error. When this field is not configured, the default behavior is to allow the request.
          */
-        export interface WebApplicationFirewallPolicySpecRulesOnerrorArgs {
+        export interface WebApplicationFirewallPolicySpecRulesOnErrorArgs {
             /**
              * statusCode sets the HTTP status code to use when denying the request.
              */
@@ -127,7 +127,7 @@ export namespace gateway {
         /**
          * References a WebApplicationFirewall that will be applied to the incoming request.
          */
-        export interface WebApplicationFirewallPolicySpecRulesWafrefArgs {
+        export interface WebApplicationFirewallPolicySpecRulesWafRefArgs {
             /**
              * Name of the WebApplicationFirewall
              */
@@ -153,7 +153,7 @@ export namespace gateway {
              *  * "Accepted" * "Ready" * "Rejected" - if any rules have an error then the whole WebApplicationFirewallPolicy will be rejected.
              */
             conditions?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusConditionsArgs>[]>;
-            ruleStatuses?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatusesArgs>[]>;
+            ruleStatuses?: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRuleStatusesArgs>[]>;
         }
 
         /**
@@ -191,11 +191,11 @@ export namespace gateway {
         /**
          * Describes the status of a Rule within a WebApplicationFirewallPolicy.
          */
-        export interface WebApplicationFirewallPolicyStatusRulestatusesArgs {
+        export interface WebApplicationFirewallPolicyStatusRuleStatusesArgs {
             /**
              * conditions describe the current state of this Rule.
              */
-            conditions: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRulestatusesConditionsArgs>[]>;
+            conditions: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallPolicyStatusRuleStatusesConditionsArgs>[]>;
             /**
              * host of the rule with the error.
              */
@@ -215,7 +215,7 @@ export namespace gateway {
          *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
          *  // other fields }
          */
-        export interface WebApplicationFirewallPolicyStatusRulestatusesConditionsArgs {
+        export interface WebApplicationFirewallPolicyStatusRuleStatusesConditionsArgs {
             /**
              * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
              */
@@ -249,8 +249,8 @@ export namespace gateway {
             /**
              * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
              */
-            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecAmbassadorselectorArgs>;
-            firewallRules: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesArgs>[]>;
+            ambassadorSelector?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecAmbassadorSelectorArgs>;
+            firewallRules: pulumi.Input<pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRulesArgs>[]>;
             /**
              * Provides a way to configure additional logging in the Edge Stack pods for the WebApplicationFirewall. This is in addition to the logging config that is available via the firewall configuration files. The following logs will always be output to the container logs when enabled.
              */
@@ -260,7 +260,7 @@ export namespace gateway {
         /**
          * Optional field that can be used to limit which instances of Edge Stack can make use of this resource
          */
-        export interface WebApplicationFirewallSpecAmbassadorselectorArgs {
+        export interface WebApplicationFirewallSpecAmbassadorSelectorArgs {
             /**
              * limits this resource to be used only by instances of Edge Stack that have an AMBASSADOR_ID matching one of the ids in the list
              */
@@ -270,11 +270,11 @@ export namespace gateway {
         /**
          * Contains configuration for where to load rules for a specific WebApplicationFirewall.
          */
-        export interface WebApplicationFirewallSpecFirewallrulesArgs {
+        export interface WebApplicationFirewallSpecFirewallRulesArgs {
             /**
              * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
              */
-            configMapRef?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesConfigmaprefArgs>;
+            configMapRef?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRulesConfigMapRefArgs>;
             /**
              * Provides a path to a file or directory on the Edge Stack pod to load rules configuration from
              */
@@ -282,7 +282,7 @@ export namespace gateway {
             /**
              * Configures downloading firewall rules from the internet via an HTTP request
              */
-            http?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallrulesHttpArgs>;
+            http?: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecFirewallRulesHttpArgs>;
             /**
              * Indicates the method that we will use to load rules configuration for the WebApplicationFirewall
              */
@@ -292,7 +292,7 @@ export namespace gateway {
         /**
          * Contains a name and namespace reference to a Kubernetes ConfigMap and a key to pull data from
          */
-        export interface WebApplicationFirewallSpecFirewallrulesConfigmaprefArgs {
+        export interface WebApplicationFirewallSpecFirewallRulesConfigMapRefArgs {
             /**
              * Key for the field in the configmap that should be use
              */
@@ -316,7 +316,7 @@ export namespace gateway {
         /**
          * Configures downloading firewall rules from the internet via an HTTP request
          */
-        export interface WebApplicationFirewallSpecFirewallrulesHttpArgs {
+        export interface WebApplicationFirewallSpecFirewallRulesHttpArgs {
             /**
              * Provides the address to download the firewall rules from.
              */
@@ -330,13 +330,13 @@ export namespace gateway {
             /**
              * Controls logging behavior when the WebApplicationFirewall interrupts a request.
              */
-            onInterrupt: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingOninterruptArgs>;
+            onInterrupt: pulumi.Input<inputs.gateway.v1alpha1.WebApplicationFirewallSpecLoggingOnInterruptArgs>;
         }
 
         /**
          * Controls logging behavior when the WebApplicationFirewall interrupts a request.
          */
-        export interface WebApplicationFirewallSpecLoggingOninterruptArgs {
+        export interface WebApplicationFirewallSpecLoggingOnInterruptArgs {
             /**
              * Configures whether the container should output logs. These additional logs are not enabled unless this is set to `true`
              */
@@ -454,9 +454,9 @@ export namespace getambassador {
              * TODO(lukeshu): In v3alpha2, consider renameing `auth_service` to just `service`, for consistency with the other resource types.
              */
             auth_service: pulumi.Input<string>;
-            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecCircuit_breakersArgs>[]>;
+            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecCircuitBreakersArgs>[]>;
             failure_mode_allow?: pulumi.Input<boolean>;
-            include_body?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecInclude_bodyArgs>;
+            include_body?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecIncludeBodyArgs>;
             path_prefix?: pulumi.Input<string>;
             proto?: pulumi.Input<string>;
             /**
@@ -467,16 +467,16 @@ export namespace getambassador {
             /**
              * TODO(lukeshu): In v3alpha2, consider getting rid of this struct type in favor of just using an int (i.e. `statusOnError: 500` instead of the current `statusOnError: { code: 500 }`).
              */
-            status_on_error?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecStatus_on_errorArgs>;
+            status_on_error?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecStatusOnErrorArgs>;
             timeout_ms?: pulumi.Input<number>;
             tls?: pulumi.Input<string>;
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecV2explicittlsArgs>;
+            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.AuthServiceSpecV2ExplicitTLSArgs>;
         }
 
-        export interface AuthServiceSpecCircuit_breakersArgs {
+        export interface AuthServiceSpecCircuitBreakersArgs {
             max_connections?: pulumi.Input<number>;
             max_pending_requests?: pulumi.Input<number>;
             max_requests?: pulumi.Input<number>;
@@ -484,7 +484,7 @@ export namespace getambassador {
             priority?: pulumi.Input<string>;
         }
 
-        export interface AuthServiceSpecInclude_bodyArgs {
+        export interface AuthServiceSpecIncludeBodyArgs {
             allow_partial: pulumi.Input<boolean>;
             /**
              * These aren't pointer types because they are required.
@@ -495,14 +495,14 @@ export namespace getambassador {
         /**
          * TODO(lukeshu): In v3alpha2, consider getting rid of this struct type in favor of just using an int (i.e. `statusOnError: 500` instead of the current `statusOnError: { code: 500 }`).
          */
-        export interface AuthServiceSpecStatus_on_errorArgs {
+        export interface AuthServiceSpecStatusOnErrorArgs {
             code?: pulumi.Input<number>;
         }
 
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface AuthServiceSpecV2explicittlsArgs {
+        export interface AuthServiceSpecV2ExplicitTLSArgs {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -629,7 +629,7 @@ export namespace getambassador {
             /**
              * Specifies whether/who to talk ACME with to automatically manage the $tlsSecret.
              */
-            acmeProvider?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecAcmeproviderArgs>;
+            acmeProvider?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecAcmeProviderArgs>;
             /**
              * Common to all Ambassador objects (and optional).
              */
@@ -641,15 +641,15 @@ export namespace getambassador {
             /**
              * Selector for Mappings we'll associate with this Host. At the moment, Selector and MappingSelector are synonyms, but that will change soon.
              */
-            mappingSelector?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecMappingselectorArgs>;
+            mappingSelector?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecMappingSelectorArgs>;
             /**
              * Configuration for the Preview URL feature of Service Preview. Defaults to preview URLs not enabled.
              */
-            previewUrl?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecPreviewurlArgs>;
+            previewUrl?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecPreviewUrlArgs>;
             /**
              * Request policy definition.
              */
-            requestPolicy?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecRequestpolicyArgs>;
+            requestPolicy?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecRequestPolicyArgs>;
             /**
              * DEPRECATED: Selector by which we can find further configuration. Use MappingSelector instead. 
              *  TODO(lukeshu): In v3alpha2, figure out how to get rid of HostSpec.DeprecatedSelector.
@@ -663,17 +663,17 @@ export namespace getambassador {
              * Name of the TLSContext the Host resource is linked with. It is not valid to specify both `tlsContext` and `tls`. 
              *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
              */
-            tlsContext?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecTlscontextArgs>;
+            tlsContext?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecTlsContextArgs>;
             /**
              * Name of the Kubernetes secret into which to save generated certificates.  If ACME is enabled (see $acmeProvider), then the default is $hostname; otherwise the default is "".  If the value is "", then we do not do TLS for this Host.
              */
-            tlsSecret?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecTlssecretArgs>;
+            tlsSecret?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecTlsSecretArgs>;
         }
 
         /**
          * Specifies whether/who to talk ACME with to automatically manage the $tlsSecret.
          */
-        export interface HostSpecAcmeproviderArgs {
+        export interface HostSpecAcmeProviderArgs {
             /**
              * Specifies who to talk ACME with to get certs. Defaults to Let's Encrypt; if "none" (case-insensitive), do not try to do ACME for this Host.
              */
@@ -683,7 +683,7 @@ export namespace getambassador {
              * Specifies the Kubernetes Secret to use to store the private key of the ACME account (essentially, where to store the auto-generated password for the auto-created ACME account).  You should not normally need to set this--the default value is based on a combination of the ACME authority being registered wit and the email address associated with the account. 
              *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
              */
-            privateKeySecret?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecAcmeproviderPrivatekeysecretArgs>;
+            privateKeySecret?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecAcmeProviderPrivateKeySecretArgs>;
             /**
              * This is normally set automatically
              */
@@ -694,7 +694,7 @@ export namespace getambassador {
          * Specifies the Kubernetes Secret to use to store the private key of the ACME account (essentially, where to store the auto-generated password for the auto-created ACME account).  You should not normally need to set this--the default value is based on a combination of the ACME authority being registered wit and the email address associated with the account. 
          *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
          */
-        export interface HostSpecAcmeproviderPrivatekeysecretArgs {
+        export interface HostSpecAcmeProviderPrivateKeySecretArgs {
             /**
              * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
              */
@@ -704,11 +704,11 @@ export namespace getambassador {
         /**
          * Selector for Mappings we'll associate with this Host. At the moment, Selector and MappingSelector are synonyms, but that will change soon.
          */
-        export interface HostSpecMappingselectorArgs {
+        export interface HostSpecMappingSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.HostSpecMappingselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.HostSpecMappingSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -718,7 +718,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface HostSpecMappingselectorMatchexpressionsArgs {
+        export interface HostSpecMappingSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -736,7 +736,7 @@ export namespace getambassador {
         /**
          * Configuration for the Preview URL feature of Service Preview. Defaults to preview URLs not enabled.
          */
-        export interface HostSpecPreviewurlArgs {
+        export interface HostSpecPreviewUrlArgs {
             /**
              * Is the Preview URL feature enabled?
              */
@@ -750,11 +750,11 @@ export namespace getambassador {
         /**
          * Request policy definition.
          */
-        export interface HostSpecRequestpolicyArgs {
-            insecure?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecRequestpolicyInsecureArgs>;
+        export interface HostSpecRequestPolicyArgs {
+            insecure?: pulumi.Input<inputs.getambassador.v3alpha1.HostSpecRequestPolicyInsecureArgs>;
         }
 
-        export interface HostSpecRequestpolicyInsecureArgs {
+        export interface HostSpecRequestPolicyInsecureArgs {
             action?: pulumi.Input<string>;
             additionalPort?: pulumi.Input<number>;
         }
@@ -767,7 +767,7 @@ export namespace getambassador {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.HostSpecSelectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.HostSpecSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -777,7 +777,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface HostSpecSelectorMatchexpressionsArgs {
+        export interface HostSpecSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -815,7 +815,7 @@ export namespace getambassador {
          * Name of the TLSContext the Host resource is linked with. It is not valid to specify both `tlsContext` and `tls`. 
          *  Note that this is a native-Kubernetes-style core.v1.LocalObjectReference, not an Ambassador-style `{name}.{namespace}` string.  Because we're opinionated, it does not support referencing a Secret in another namespace (because most native Kubernetes resources don't support that), but if we ever abandon that opinion and decide to support non-local references it, it would be by adding a `namespace:` field by changing it from a core.v1.LocalObjectReference to a core.v1.SecretReference, not by adopting the `{name}.{namespace}` notation.
          */
-        export interface HostSpecTlscontextArgs {
+        export interface HostSpecTlsContextArgs {
             /**
              * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
              */
@@ -825,7 +825,7 @@ export namespace getambassador {
         /**
          * Name of the Kubernetes secret into which to save generated certificates.  If ACME is enabled (see $acmeProvider), then the default is $hostname; otherwise the default is "".  If the value is "", then we do not do TLS for this Host.
          */
-        export interface HostSpecTlssecretArgs {
+        export interface HostSpecTlsSecretArgs {
             /**
              * name is unique within a namespace to reference a secret resource.
              */
@@ -895,7 +895,7 @@ export namespace getambassador {
             /**
              * HostBinding allows restricting which Hosts will be used for this Listener.
              */
-            hostBinding: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostbindingArgs>;
+            hostBinding: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostBindingArgs>;
             /**
              * L7Depth specifies how many layer 7 load balancers are between us and the edge of the network.
              */
@@ -925,21 +925,21 @@ export namespace getambassador {
         /**
          * HostBinding allows restricting which Hosts will be used for this Listener.
          */
-        export interface ListenerSpecHostbindingArgs {
+        export interface ListenerSpecHostBindingArgs {
             /**
              * NamespaceBindingType defines we we specify which namespaces to look for Hosts in.
              */
-            namespace?: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostbindingNamespaceArgs>;
+            namespace?: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostBindingNamespaceArgs>;
             /**
              * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
              */
-            selector?: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostbindingSelectorArgs>;
+            selector?: pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostBindingSelectorArgs>;
         }
 
         /**
          * NamespaceBindingType defines we we specify which namespaces to look for Hosts in.
          */
-        export interface ListenerSpecHostbindingNamespaceArgs {
+        export interface ListenerSpecHostBindingNamespaceArgs {
             /**
              * NamespaceFromType defines how we evaluate a NamespaceBindingType.
              */
@@ -949,11 +949,11 @@ export namespace getambassador {
         /**
          * A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
          */
-        export interface ListenerSpecHostbindingSelectorArgs {
+        export interface ListenerSpecHostBindingSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostbindingSelectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.ListenerSpecHostBindingSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -963,7 +963,7 @@ export namespace getambassador {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ListenerSpecHostbindingSelectorMatchexpressionsArgs {
+        export interface ListenerSpecHostBindingSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -989,7 +989,7 @@ export namespace getambassador {
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
             driver?: pulumi.Input<string>;
-            driver_config?: pulumi.Input<inputs.getambassador.v3alpha1.LogServiceSpecDriver_configArgs>;
+            driver_config?: pulumi.Input<inputs.getambassador.v3alpha1.LogServiceSpecDriverConfigArgs>;
             flush_interval_byte_size?: pulumi.Input<number>;
             flush_interval_time?: pulumi.Input<number>;
             /**
@@ -1004,11 +1004,11 @@ export namespace getambassador {
             stats_name?: pulumi.Input<string>;
         }
 
-        export interface LogServiceSpecDriver_configArgs {
-            additional_log_headers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.LogServiceSpecDriver_configAdditional_log_headersArgs>[]>;
+        export interface LogServiceSpecDriverConfigArgs {
+            additional_log_headers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.LogServiceSpecDriverConfigAdditionalLogHeadersArgs>[]>;
         }
 
-        export interface LogServiceSpecDriver_configAdditional_log_headersArgs {
+        export interface LogServiceSpecDriverConfigAdditionalLogHeadersArgs {
             during_request?: pulumi.Input<boolean>;
             during_response?: pulumi.Input<boolean>;
             during_trailer?: pulumi.Input<boolean>;
@@ -1020,8 +1020,8 @@ export namespace getambassador {
          */
         export interface MappingSpecArgs {
             add_linkerd_headers?: pulumi.Input<boolean>;
-            add_request_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecAdd_request_headersArgs>}>;
-            add_response_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecAdd_response_headersArgs>}>;
+            add_request_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecAddRequestHeadersArgs>}>;
+            add_response_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecAddResponseHeadersArgs>}>;
             /**
              * A case-insensitive list of the non-HTTP protocols to allow "upgrading" to from HTTP via the "Connection: upgrade" mechanism[1].  After the upgrade, Ambassador does not interpret the traffic, and behaves similarly to how it does for TCPMappings. 
              *  [1]: https://tools.ietf.org/html/rfc7230#section-6.7 
@@ -1045,7 +1045,7 @@ export namespace getambassador {
              */
             bypass_error_response_overrides?: pulumi.Input<boolean>;
             case_sensitive?: pulumi.Input<boolean>;
-            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecCircuit_breakersArgs>[]>;
+            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecCircuitBreakersArgs>[]>;
             cluster_idle_timeout_ms?: pulumi.Input<number>;
             cluster_max_connection_lifetime_ms?: pulumi.Input<number>;
             cluster_tag?: pulumi.Input<string>;
@@ -1062,10 +1062,10 @@ export namespace getambassador {
             /**
              * Error response overrides for this Mapping. Replaces all of the `error_response_overrides` set on the Ambassador module, if any.
              */
-            error_response_overrides?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecError_response_overridesArgs>[]>;
+            error_response_overrides?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecErrorResponseOverridesArgs>[]>;
             grpc?: pulumi.Input<boolean>;
             headers?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
-            health_checks?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksArgs>[]>;
+            health_checks?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksArgs>[]>;
             /**
              * Exact match for the hostname of a request if HostRegex is false; regex match for the hostname if HostRegex is true. 
              *  Host specifies both a match for the ':authority' header of a request, as well as a match criterion for Host CRDs: a Mapping that specifies Host will not associate with a Host that doesn't have a matching Hostname. 
@@ -1093,7 +1093,7 @@ export namespace getambassador {
              * A DomainMap is the overall Mapping.spec.Labels type. It maps domains (kind of like namespaces for Mapping labels) to arrays of label groups.
              */
             labels?: pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<{[key: string]: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsArgs>[]>}>[]>}>;
-            load_balancer?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLoad_balancerArgs>;
+            load_balancer?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLoadBalancerArgs>;
             method?: pulumi.Input<string>;
             method_regex?: pulumi.Input<boolean>;
             modules?: pulumi.Input<pulumi.Input<{[key: string]: any}>[]>;
@@ -1121,13 +1121,13 @@ export namespace getambassador {
             /**
              * Prefix regex rewrite to use when generating an HTTP redirect. Used with `host_redirect`.
              */
-            regex_redirect?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRegex_redirectArgs>;
-            regex_rewrite?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRegex_rewriteArgs>;
+            regex_redirect?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRegexRedirectArgs>;
+            regex_rewrite?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRegexRewriteArgs>;
             remove_request_headers?: pulumi.Input<pulumi.Input<string>[]>;
             remove_response_headers?: pulumi.Input<pulumi.Input<string>[]>;
             resolver?: pulumi.Input<string>;
             respect_dns_ttl?: pulumi.Input<boolean>;
-            retry_policy?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRetry_policyArgs>;
+            retry_policy?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecRetryPolicyArgs>;
             rewrite?: pulumi.Input<string>;
             service: pulumi.Input<string>;
             shadow?: pulumi.Input<boolean>;
@@ -1147,23 +1147,23 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecV2explicittlsArgs>;
+            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecV2ExplicitTLSArgs>;
             weight?: pulumi.Input<number>;
         }
 
-        export interface MappingSpecAdd_request_headersArgs {
+        export interface MappingSpecAddRequestHeadersArgs {
             append?: pulumi.Input<boolean>;
             v2Representation?: pulumi.Input<string>;
             value?: pulumi.Input<string>;
         }
 
-        export interface MappingSpecAdd_response_headersArgs {
+        export interface MappingSpecAddResponseHeadersArgs {
             append?: pulumi.Input<boolean>;
             v2Representation?: pulumi.Input<string>;
             value?: pulumi.Input<string>;
         }
 
-        export interface MappingSpecCircuit_breakersArgs {
+        export interface MappingSpecCircuitBreakersArgs {
             max_connections?: pulumi.Input<number>;
             max_pending_requests?: pulumi.Input<number>;
             max_requests?: pulumi.Input<number>;
@@ -1195,11 +1195,11 @@ export namespace getambassador {
         /**
          * A response rewrite for an HTTP error response
          */
-        export interface MappingSpecError_response_overridesArgs {
+        export interface MappingSpecErrorResponseOverridesArgs {
             /**
              * The new response body
              */
-            body: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecError_response_overridesBodyArgs>;
+            body: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecErrorResponseOverridesBodyArgs>;
             /**
              * The status code to match on -- not a pointer because it's required.
              */
@@ -1209,7 +1209,7 @@ export namespace getambassador {
         /**
          * The new response body
          */
-        export interface MappingSpecError_response_overridesBodyArgs {
+        export interface MappingSpecErrorResponseOverridesBodyArgs {
             /**
              * The content type to set on the error response body when using text_format or text_format_source. Defaults to 'text/plain'.
              */
@@ -1225,13 +1225,13 @@ export namespace getambassador {
             /**
              * A format string sourced from a file on the Ambassador container. Useful for larger response bodies that should not be placed inline in configuration.
              */
-            text_format_source?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecError_response_overridesBodyText_format_sourceArgs>;
+            text_format_source?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecErrorResponseOverridesBodyTextFormatSourceArgs>;
         }
 
         /**
          * A format string sourced from a file on the Ambassador container. Useful for larger response bodies that should not be placed inline in configuration.
          */
-        export interface MappingSpecError_response_overridesBodyText_format_sourceArgs {
+        export interface MappingSpecErrorResponseOverridesBodyTextFormatSourceArgs {
             /**
              * The name of a file on the Ambassador pod that contains a format text string.
              */
@@ -1241,11 +1241,11 @@ export namespace getambassador {
         /**
          * HealthCheck specifies settings for performing active health checking on upstreams
          */
-        export interface MappingSpecHealth_checksArgs {
+        export interface MappingSpecHealthChecksArgs {
             /**
              * Configuration for where the healthcheck request should be made to
              */
-            health_check: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkArgs>;
+            health_check: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckArgs>;
             /**
              * Number of expected responses for the upstream to be considered healthy. Defaults to 1.
              */
@@ -1267,21 +1267,21 @@ export namespace getambassador {
         /**
          * Configuration for where the healthcheck request should be made to
          */
-        export interface MappingSpecHealth_checksHealth_checkArgs {
+        export interface MappingSpecHealthChecksHealthCheckArgs {
             /**
              * HealthCheck for gRPC upstreams. Only one of grpc_health_check or http_health_check may be specified
              */
-            grpc?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkGrpcArgs>;
+            grpc?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckGrpcArgs>;
             /**
              * HealthCheck for HTTP upstreams. Only one of http_health_check or grpc_health_check may be specified
              */
-            http?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttpArgs>;
+            http?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttpArgs>;
         }
 
         /**
          * HealthCheck for gRPC upstreams. Only one of grpc_health_check or http_health_check may be specified
          */
-        export interface MappingSpecHealth_checksHealth_checkGrpcArgs {
+        export interface MappingSpecHealthChecksHealthCheckGrpcArgs {
             /**
              * The value of the :authority header in the gRPC health check request. If left empty the upstream name will be used.
              */
@@ -1295,15 +1295,15 @@ export namespace getambassador {
         /**
          * HealthCheck for HTTP upstreams. Only one of http_health_check or grpc_health_check may be specified
          */
-        export interface MappingSpecHealth_checksHealth_checkHttpArgs {
-            add_request_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttpAdd_request_headersArgs>}>;
-            expected_statuses?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealth_checksHealth_checkHttpExpected_statusesArgs>[]>;
+        export interface MappingSpecHealthChecksHealthCheckHttpArgs {
+            add_request_headers?: pulumi.Input<{[key: string]: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttpAddRequestHeadersArgs>}>;
+            expected_statuses?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecHealthChecksHealthCheckHttpExpectedStatusesArgs>[]>;
             hostname?: pulumi.Input<string>;
             path: pulumi.Input<string>;
             remove_request_headers?: pulumi.Input<pulumi.Input<string>[]>;
         }
 
-        export interface MappingSpecHealth_checksHealth_checkHttpAdd_request_headersArgs {
+        export interface MappingSpecHealthChecksHealthCheckHttpAddRequestHeadersArgs {
             append?: pulumi.Input<boolean>;
             v2Representation?: pulumi.Input<string>;
             value?: pulumi.Input<string>;
@@ -1312,7 +1312,7 @@ export namespace getambassador {
         /**
          * A range of response statuses from Start to End inclusive
          */
-        export interface MappingSpecHealth_checksHealth_checkHttpExpected_statusesArgs {
+        export interface MappingSpecHealthChecksHealthCheckHttpExpectedStatusesArgs {
             /**
              * End of the statuses to include. Must be between 100 and 599 (inclusive)
              */
@@ -1337,36 +1337,36 @@ export namespace getambassador {
             /**
              * Sets the label "destination_cluster=«Envoy destination cluster name»".
              */
-            destination_cluster?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsDestination_clusterArgs>;
+            destination_cluster?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsDestinationClusterArgs>;
             /**
              * Sets the label "«key»=«value»" (where by default «key» is "generic_key").
              */
-            generic_key?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsGeneric_keyArgs>;
+            generic_key?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsGenericKeyArgs>;
             /**
              * Sets the label "remote_address=«IP address of the client»".
              */
-            remote_address?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsRemote_addressArgs>;
+            remote_address?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsRemoteAddressArgs>;
             /**
              * If the «header_name» header is set, then set the label "«key»=«Value of the «header_name» header»"; otherwise skip applying this label group.
              */
-            request_headers?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsRequest_headersArgs>;
+            request_headers?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsRequestHeadersArgs>;
             /**
              * Sets the label "source_cluster=«Envoy source cluster name»".
              */
-            source_cluster?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsSource_clusterArgs>;
+            source_cluster?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLabelsSourceClusterArgs>;
         }
 
         /**
          * Sets the label "destination_cluster=«Envoy destination cluster name»".
          */
-        export interface MappingSpecLabelsDestination_clusterArgs {
+        export interface MappingSpecLabelsDestinationClusterArgs {
             key: pulumi.Input<string>;
         }
 
         /**
          * Sets the label "«key»=«value»" (where by default «key» is "generic_key").
          */
-        export interface MappingSpecLabelsGeneric_keyArgs {
+        export interface MappingSpecLabelsGenericKeyArgs {
             /**
              * The default is "generic_key".
              */
@@ -1378,14 +1378,14 @@ export namespace getambassador {
         /**
          * Sets the label "remote_address=«IP address of the client»".
          */
-        export interface MappingSpecLabelsRemote_addressArgs {
+        export interface MappingSpecLabelsRemoteAddressArgs {
             key: pulumi.Input<string>;
         }
 
         /**
          * If the «header_name» header is set, then set the label "«key»=«Value of the «header_name» header»"; otherwise skip applying this label group.
          */
-        export interface MappingSpecLabelsRequest_headersArgs {
+        export interface MappingSpecLabelsRequestHeadersArgs {
             header_name: pulumi.Input<string>;
             key: pulumi.Input<string>;
             omit_if_not_present?: pulumi.Input<boolean>;
@@ -1394,18 +1394,18 @@ export namespace getambassador {
         /**
          * Sets the label "source_cluster=«Envoy source cluster name»".
          */
-        export interface MappingSpecLabelsSource_clusterArgs {
+        export interface MappingSpecLabelsSourceClusterArgs {
             key: pulumi.Input<string>;
         }
 
-        export interface MappingSpecLoad_balancerArgs {
-            cookie?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLoad_balancerCookieArgs>;
+        export interface MappingSpecLoadBalancerArgs {
+            cookie?: pulumi.Input<inputs.getambassador.v3alpha1.MappingSpecLoadBalancerCookieArgs>;
             header?: pulumi.Input<string>;
             policy: pulumi.Input<string>;
             source_ip?: pulumi.Input<boolean>;
         }
 
-        export interface MappingSpecLoad_balancerCookieArgs {
+        export interface MappingSpecLoadBalancerCookieArgs {
             name: pulumi.Input<string>;
             path?: pulumi.Input<string>;
             ttl?: pulumi.Input<string>;
@@ -1414,17 +1414,17 @@ export namespace getambassador {
         /**
          * Prefix regex rewrite to use when generating an HTTP redirect. Used with `host_redirect`.
          */
-        export interface MappingSpecRegex_redirectArgs {
+        export interface MappingSpecRegexRedirectArgs {
             pattern?: pulumi.Input<string>;
             substitution?: pulumi.Input<string>;
         }
 
-        export interface MappingSpecRegex_rewriteArgs {
+        export interface MappingSpecRegexRewriteArgs {
             pattern?: pulumi.Input<string>;
             substitution?: pulumi.Input<string>;
         }
 
-        export interface MappingSpecRetry_policyArgs {
+        export interface MappingSpecRetryPolicyArgs {
             num_retries?: pulumi.Input<number>;
             per_try_timeout?: pulumi.Input<string>;
             retry_on?: pulumi.Input<string>;
@@ -1433,7 +1433,7 @@ export namespace getambassador {
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface MappingSpecV2explicittlsArgs {
+        export interface MappingSpecV2ExplicitTLSArgs {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1496,13 +1496,13 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.RateLimitServiceSpecV2explicittlsArgs>;
+            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.RateLimitServiceSpecV2ExplicitTLSArgs>;
         }
 
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface RateLimitServiceSpecV2explicittlsArgs {
+        export interface RateLimitServiceSpecV2ExplicitTLSArgs {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1527,7 +1527,7 @@ export namespace getambassador {
              *  TODO(lukeshu): In v3alpha2, consider renaming all of the `ambassador_id` (singular) fields to `ambassador_ids` (plural).
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
-            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.TCPMappingSpecCircuit_breakersArgs>[]>;
+            circuit_breakers?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.TCPMappingSpecCircuitBreakersArgs>[]>;
             cluster_tag?: pulumi.Input<string>;
             enable_ipv4?: pulumi.Input<boolean>;
             enable_ipv6?: pulumi.Input<boolean>;
@@ -1547,11 +1547,11 @@ export namespace getambassador {
             /**
              * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
              */
-            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.TCPMappingSpecV2explicittlsArgs>;
+            v2ExplicitTLS?: pulumi.Input<inputs.getambassador.v3alpha1.TCPMappingSpecV2ExplicitTLSArgs>;
             weight?: pulumi.Input<number>;
         }
 
-        export interface TCPMappingSpecCircuit_breakersArgs {
+        export interface TCPMappingSpecCircuitBreakersArgs {
             max_connections?: pulumi.Input<number>;
             max_pending_requests?: pulumi.Input<number>;
             max_requests?: pulumi.Input<number>;
@@ -1562,7 +1562,7 @@ export namespace getambassador {
         /**
          * V2ExplicitTLS controls some vanity/stylistic elements when converting from v3alpha1 to v2.  The values in an V2ExplicitTLS should not in any way affect the runtime operation of Emissary; except that it may affect internal names in the Envoy config, which may in turn affect stats names.  But it should not affect any end-user observable behavior.
          */
-        export interface TCPMappingSpecV2explicittlsArgs {
+        export interface TCPMappingSpecV2ExplicitTLSArgs {
             /**
              * ServiceScheme specifies how to spell and capitalize the scheme-part of the service URL. 
              *  Acceptable values are "http://" (case-insensitive), "https://" (case-insensitive), or "".  The value is used if it agrees with whether or not this resource enables TLS origination, or if something else in the resource overrides the scheme.
@@ -1615,7 +1615,7 @@ export namespace getambassador {
              */
             ambassador_id?: pulumi.Input<pulumi.Input<string>[]>;
             config?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecConfigArgs>;
-            custom_tags?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsArgs>[]>;
+            custom_tags?: pulumi.Input<pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsArgs>[]>;
             driver: pulumi.Input<string>;
             sampling?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecSamplingArgs>;
             service: pulumi.Input<string>;
@@ -1641,26 +1641,26 @@ export namespace getambassador {
         /**
          * TracingCustomTag provides a data structure for capturing envoy's `type.tracing.v3.CustomTag`
          */
-        export interface TracingServiceSpecCustom_tagsArgs {
+        export interface TracingServiceSpecCustomTagsArgs {
             /**
              * Environment explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            environment?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsEnvironmentArgs>;
+            environment?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsEnvironmentArgs>;
             /**
              * Literal explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            literal?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsLiteralArgs>;
+            literal?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsLiteralArgs>;
             /**
              * Header explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
              */
-            request_header?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustom_tagsRequest_headerArgs>;
+            request_header?: pulumi.Input<inputs.getambassador.v3alpha1.TracingServiceSpecCustomTagsRequestHeaderArgs>;
             tag: pulumi.Input<string>;
         }
 
         /**
          * Environment explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsEnvironmentArgs {
+        export interface TracingServiceSpecCustomTagsEnvironmentArgs {
             default_value?: pulumi.Input<string>;
             name: pulumi.Input<string>;
         }
@@ -1668,14 +1668,14 @@ export namespace getambassador {
         /**
          * Literal explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsLiteralArgs {
+        export interface TracingServiceSpecCustomTagsLiteralArgs {
             value: pulumi.Input<string>;
         }
 
         /**
          * Header explicitly specifies the protocol stack to set up. Exactly one of Literal, Environment or Header must be supplied.
          */
-        export interface TracingServiceSpecCustom_tagsRequest_headerArgs {
+        export interface TracingServiceSpecCustomTagsRequestHeaderArgs {
             default_value?: pulumi.Input<string>;
             name: pulumi.Input<string>;
         }
