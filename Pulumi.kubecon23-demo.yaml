@@ -2,9 +2,15 @@ encryptionsalt: v1:tBCJNty1IZE=:v1:HZbUnsXfuyqSrR1N:n+95jfP3VvRVyOVo0Pc3QGRtWRPF
 config:
   demo-infra:cloudConnectToken:
     secure: v1:Tp4aVs7zZis+4+bC:WPILCInd/gkAkd/AraC/L6T6k0FCA63zivYYGqQ/QPN1z0z84XoCwx6vn6MmoA29FXZXniUri5LEV9w8oj8mTHaOZPfklbIIs3genM5njQx3JTP+ZOh1vkkurUm8/1KFOUpX2UoH9WHRyK20D3v6LnqHaIE=
+  demo-infra:edgeyHostPrefix: edgey
   demo-infra:email: dsudia@datawire.io
-  demo-infra:hostPrefix: na23
+  demo-infra:emojiHostPrefix: emoji
+  demo-infra:googleOauthClientId:
+    secure: v1:oQuZF96QbKT68mOW:C2pIkQ7rHzt0peNlGOLhIv/EAKnNWaxjAihXnnPd6ZfUzph3pgksqwvPoDge9cc9ye1aUuBAfymE6lExL2WOKMgx3hxgmqdAGwg/+j/GtYCSpLaPO9e0Pg==
+  demo-infra:googleOauthSecret:
+    secure: v1:sfXO1GL9Tblf9JAw:d4CH/C19YJbNtOdyywb71TA6otSDyGmMBZtSVWF3c1xhynWxO/hcc2kMqvjeuKaqGht0
   demo-infra:providerCluster: kubecon23-demo
   demo-infra:providerContext: kubecon23-demo
   demo-infra:providerKubeconfigPath: /Users/davesudia/.kube/config
   demo-infra:route53ZoneId: Z066394514EF7LPNGFVV
+  demo-infra:xssHostPrefix: waf

@@ -164,8 +164,8 @@ export const chart = new helm.v3.Chart('edge-stack',{
           'a8r.io/runbook': 'https://github.com/a8r-se/demo-infra/issues',
           'a8r.io/support': 'https://github.com/a8r-se/demo-infra/issues',
           'a8r.io/uptime': 'https://github.com/a8r-se/demo-infra/issues',
-          'kubeception.ingress.type': 'sni',
-          'kubeception.ingress.name': 'edge-stack',
+//          'kubeception.ingress.type': 'sni',
+//          'kubeception.ingress.name': 'edge-stack',
         },
       },
       adminService: {
@@ -217,7 +217,7 @@ export const chart = new helm.v3.Chart('edge-stack',{
 }, { provider: cluster.provider, dependsOn: [edgeStackCRDs, apiext, edgeStackRedisDeployment, edgeStackRedisService] })
 
 const ambassadorSvc = chart.getResource('v1/Service', 'ambassador/edge-stack')
-export const publicURL = ambassadorSvc.status.loadBalancer.ingress[0].hostname
+export const publicIp = ambassadorSvc.status.loadBalancer.ingress[0].ip
 
 // Connector config
 export const k8sEndpointResolver = new ambassadorCRDs.getambassador.v3alpha1.KubernetesEndpointResolver('endpoint', {
